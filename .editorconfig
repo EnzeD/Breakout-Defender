@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# WFAC010: Configuration haute résolution non prise en charge
+dotnet_diagnostic.WFAC010.severity = none
