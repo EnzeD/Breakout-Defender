@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EnzedSpace
+namespace MainSpace
 {
     public delegate void OnClick(Button pSender);
     public class Button : Sprite

@@ -7,7 +7,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EnzedSpace
+namespace MainSpace
 {
     public class Paddle : Sprite
     {

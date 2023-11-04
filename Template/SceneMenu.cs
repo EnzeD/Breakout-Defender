@@ -10,7 +10,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EnzedSpace
+namespace MainSpace
 {
     class SceneMenu : Scene
     {

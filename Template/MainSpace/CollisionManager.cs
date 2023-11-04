@@ -1,4 +1,4 @@
-﻿using EnzedSpace;
+﻿using MainSpace;
 using Microsoft.Xna.Framework;
 using SharpDX.Direct3D9;
 using System;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
 
-namespace EnzedSpace
+namespace MainSpace
 {
     public class CollisionManager
     {

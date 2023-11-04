@@ -11,9 +11,9 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
-using static EnzedSpace.GameState;
+using static MainSpace.GameState;
 
-namespace EnzedSpace
+namespace MainSpace
 {  
     class SceneGameplay : Scene
     {

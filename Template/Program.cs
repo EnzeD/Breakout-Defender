@@ -1,3 +1,3 @@
 ﻿
-using var game = new EnzedSpace.MainGame();
+using var game = new MainSpace.MainGame();
 game.Run();
