@@ -34,6 +34,11 @@ namespace MainSpace
         public Texture2D TexWhiteCirle { get { return _Content.Load<Texture2D>("white circle"); } }
         public Texture2D TexWhiteVerticalBar { get { return _Content.Load<Texture2D>("white vertical bar"); } }
         public Texture2D TexWhiteLateralBar { get { return _Content.Load<Texture2D>("white lateral bar"); } }
+        public Texture2D TexWhiteBrick { get { return _Content.Load<Texture2D>("white brick"); } }
+        public Texture2D TexCircleParticle { get { return _Content.Load<Texture2D>("circle"); } }
+        public Texture2D TexStarParticle { get { return _Content.Load<Texture2D>("star"); } }
+        public Texture2D TexDiamondParticle { get { return _Content.Load<Texture2D>("diamond"); } }
+
 
     }
 }

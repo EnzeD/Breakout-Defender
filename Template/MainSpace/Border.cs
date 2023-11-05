@@ -18,7 +18,7 @@ namespace MainSpace
             Left,
             Right
         };
-        public Border(Texture2D pTexture, BorderSide pSide) : base(pTexture)
+        public Border(Texture2D pTexture, BorderSide pSide, Color color) : base(pTexture, color)
         {
             Side = pSide;
         }
@@ -31,7 +31,7 @@ namespace MainSpace
                     Position = new Vector2(si.Width / 3, 45);
                     break;
                 case BorderSide.Right:
-                    Position = new Vector2(si.Width - si.Width / 3 - 1, 45);
+                    Position = new Vector2(si.Width - si.Width / 3 +2, 45);
                     break;
                 case BorderSide.Top:
                     Position = new Vector2(si.Width / 3, 45);

@@ -21,7 +21,7 @@ namespace MainSpace
         public static float targetRatioH = screenInfo.Height/ screenInfo.targetH;
 
         // Constructor
-        public Button(Texture2D pTexture) : base(pTexture) 
+        public Button(Texture2D pTexture, Color color) : base(pTexture, color) 
         {
 
         }

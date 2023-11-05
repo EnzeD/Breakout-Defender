@@ -35,7 +35,9 @@ namespace MainSpace
         }
 
         public virtual void Update(GameTime gameTime) 
-        { 
+        {
+
+
             foreach (IActor actor in listActors) 
             { 
                 actor.Update(gameTime); 
@@ -44,7 +46,8 @@ namespace MainSpace
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            foreach (IActor actor in listActors)
+            List<IActor> sortedActors = listActors.OrderBy(actor => actor is Border).ToList();
+            foreach (IActor actor in sortedActors)
             {
                 actor.Draw(mainGame._spriteBatch);
             }

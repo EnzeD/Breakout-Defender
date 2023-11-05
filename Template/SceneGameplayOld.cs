@@ -17,7 +17,7 @@ namespace MainSpace
         public int Energy;
 
         // Constructor
-        public Hero(Texture2D pTexture) : base(pTexture) 
+        public Hero(Texture2D pTexture, Color color) : base(pTexture, color) 
         {
             Energy = 100;
         }
@@ -33,7 +33,7 @@ namespace MainSpace
     class Meteor : Sprite
     {
         // Constructor
-        public Meteor(Texture2D texture) : base(texture) 
+        public Meteor(Texture2D texture, Color color) : base(texture, color) 
         {
             do
             {
@@ -74,7 +74,7 @@ namespace MainSpace
 
             for (int i = 0; i < 20; i++)
             {
-                Meteor m = new Meteor(mainGame.Content.Load<Texture2D>("meteor"));
+                Meteor m = new Meteor(mainGame.Content.Load<Texture2D>("meteor"), Color.White);
                 m.Position = new Vector2(
                     Util.GetInt(1, Screen.Width - m.Texture.Width),
                     Util.GetInt(1, Screen.Height - m.Texture.Height)
@@ -82,7 +82,7 @@ namespace MainSpace
                 listActors.Add(m);
             }
 
-            MyShip = new Hero(mainGame.Content.Load<Texture2D>("ship"));
+            MyShip = new Hero(mainGame.Content.Load<Texture2D>("ship"), Color.White);
             MyShip.Position = new Vector2(
                 (Screen.Width / 2 - MyShip.Texture.Width / 2),
                 (Screen.Height / 2 - MyShip.Texture.Height / 2)

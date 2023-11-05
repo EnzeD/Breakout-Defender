@@ -12,12 +12,14 @@ namespace MainSpace
     {
         // Sprite Properties
         public Vector2 Position { get; set; }
-        public Texture2D Texture { get; }
+        public Texture2D Texture { get; set; }
         public bool ToRemove { get; set; }
         public Vector2 Origin { get; private set; }
         public bool IsCentered { get; set; }
         public Rectangle BoundingBox { get; set; }
         public Vector2 Velocity { get; set; }
+        public Color Color { get; set; }
+        public bool isVisible = true;
 
         // To make it easier to get values
         public int Width { get { return Texture.Width; } }
@@ -28,13 +30,14 @@ namespace MainSpace
         public float VY { get { return Velocity.Y; } }
 
         // Constructors
-        public Sprite(Texture2D pTexture)
+        public Sprite(Texture2D pTexture, Color color)
         {
             Texture = pTexture;
             ToRemove = false;
             IsCentered = false;
+            Color = color;
         }
-        public Sprite(Texture2D pTexture, bool isCentered = true)
+        public Sprite(Texture2D pTexture, Color color, bool isCentered)
         {
             Texture = pTexture;
             ToRemove = false;
@@ -48,6 +51,7 @@ namespace MainSpace
             {
                 Origin = Vector2.Zero;
             }
+            Color = color;
         }
 
         // Methods
@@ -78,7 +82,8 @@ namespace MainSpace
         // Draw
         public virtual void Draw(SpriteBatch pSpriteBatch)
         {
-            pSpriteBatch.Draw(Texture, Position, null, Color.White, 0, Origin, 1, SpriteEffects.None, 0);
+            if (isVisible)
+                pSpriteBatch.Draw(Texture, Position, null, Color, 0, Origin, 1, SpriteEffects.None, 0);
         }
     }
 }

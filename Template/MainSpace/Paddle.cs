@@ -12,11 +12,11 @@ namespace MainSpace
     public class Paddle : Sprite
     {
         protected const int DIST_FROM_BOTTOM_SCREEN = 55;
-        public Paddle(Texture2D pTexture) : base(pTexture)
+        public Paddle(Texture2D pTexture, Color color) : base(pTexture, color)
         {
 
         }
-        public Paddle(Texture2D pTexture, bool isCentered = true) : base(pTexture, isCentered)
+        public Paddle(Texture2D pTexture, Color color, bool isCentered = true) : base(pTexture, color, isCentered)
         {
 
         }

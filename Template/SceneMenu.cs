@@ -42,7 +42,7 @@ namespace MainSpace
             oldKBState = Keyboard.GetState();
             oldGPState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.IndependentAxes);
 
-            MyButton = new Button(mainGame.Content.Load<Texture2D>("button"));
+            MyButton = new Button(mainGame.Content.Load<Texture2D>("button"), Color.White);
             MyButton.Position = new Vector2(
                 Screen.Width / 2 - MyButton.Texture.Width/2, 
                 Screen.Height / 2 - MyButton.Texture.Height/2);
