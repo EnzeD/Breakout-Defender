@@ -29,6 +29,7 @@ namespace MainSpace
             int startY = pStartY + pSpacing + (pStartNumberOfRows - 1) * (brickHeight + spacing);
             int bricksPerRow = pBricksPerRow;
             int numberOfRows = pNumberOfRows;
+            Color color;
 
             Random rand = new Random();
 
@@ -39,11 +40,35 @@ namespace MainSpace
                     int x = startX + col * (brickWidth + spacing);
                     int y = startY - row * (brickHeight + spacing);
 
+                    int randomNumber = rand.Next(0, 4);
+                    switch (randomNumber)
+                    {
+                        case 0:
+                            color = Color.Yellow;
+                            break;
+                        case 1:
+                            color = Color.Cyan;
+                            break;
+                        case 2:
+                            color = Color.LawnGreen;
+                            break;
+                        case 3:
+                            color = Color.DeepPink;
+                            break;
+                        default: 
+                            color = Color.White;
+                            break;
+
+
+                    }
+                    /*
                     int r = rand.Next(256);
                     int g = rand.Next(256);
                     int b = rand.Next(256);
-
                     Brick brick = new Brick(pTexture, new Color(r, g, b), true);
+                    */
+
+                    Brick brick = new Brick(pTexture, color, true);
                     brick.Position = new Vector2(x, y);
                     brick.isVisible = false;
                     listActors.Add(brick);

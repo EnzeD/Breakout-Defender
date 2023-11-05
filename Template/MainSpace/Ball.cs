@@ -56,7 +56,7 @@ namespace MainSpace
 
             // Update particles
             particleSystem.EmitterLocation = Position;
-            particleSystem.Update(ParticleSystem.ParticleEmitterType.Ball);
+            particleSystem.UpdateBallsParticle(Position, ParticleSystem.ParticleEmitterType.Ball);
 
             base.Update(pGameTime);
             PreviousPosition = Position;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MainSpace;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,10 +19,14 @@ public static class ServiceLocator
         return (T)listServices[typeof(T)];
     }
 
+    public static int Xp { get; set; }
+    public static int Level { get; set; }
+    public const int DIST_FROM_BOTTOM_SCREEN = 55;
+
     /* TO DO
      * score
      * improve ScreenInfo
-     * 
+     * xp
      * 
      */
 

@@ -1,16 +1,21 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace MainSpace
 {
     public class CollisionManager
     {
         private static readonly ScreenInfo si = ServiceLocator.GetService<ScreenInfo>();
+        private static readonly AssetManager am = ServiceLocator.GetService<AssetManager>();
+
         private readonly List<IActor> listActors;
         private readonly List<Ball> listBalls = new List<Ball>();
         private readonly List<Brick> listBricks = new List<Brick>();
+        private readonly List<Xp> listXp = new List<Xp>();
         private Paddle paddle;
         private Border leftBorder, rightBorder, topBorder;
         public CollisionManager(List<IActor> pListActors)
@@ -33,6 +38,10 @@ namespace MainSpace
             // Extract only bricks
             listBricks.Clear();
             listBricks.AddRange(listActors.OfType<Brick>());
+
+            // Extract only xp
+            listXp.Clear();
+            listXp.AddRange(listActors.OfType<Xp>());
 
             // Collisions with game borders
             foreach (Ball ball in listBalls)
@@ -57,6 +66,18 @@ namespace MainSpace
                     ball.ToRemove = true;
                 }
             }
+            // Collisions with game borders
+            foreach (Xp xp in listXp)
+            {
+                CheckXpCollision(paddle, xp, particleSystem);
+
+                // Collision with bottom screen
+                if (xp.Y > si.Height + xp.Width)
+                {
+                    xp.ToRemove = true;
+                }
+            }
+
         }
 
         public void CheckBorderCollision(Ball ball)
@@ -158,11 +179,32 @@ namespace MainSpace
 
                 if (brick.ToRemove)
                 {
-                    // Set the emitter location to the brick's position
-                    particleSystem.EmitterLocation = new Vector2(brick.X, brick.Y);
-                    // Call a method on the particle system to create particles
-                    particleSystem.CreateParticles();
+                    // Explosion
+                    Vector2 ExplositionLocation = new Vector2(brick.X, brick.Y);
+                    particleSystem.CreateExplosion(brick.Color, ExplositionLocation, numberOfParticles: 20, ParticleSystem.ParticleEmitterType.Brick);
+
+                    // Xp
+                    Random random = new Random();
+                    int rnd = random.Next(0, 5);
+                    if (rnd == 0)
+                    {
+                        Xp xp = new Xp(am.TexYellowSquare, Color.White, ExplositionLocation, true);
+                        listActors.Add(xp);
+                    }
                 }
+            }
+        }
+        public void CheckXpCollision(Paddle paddle, Xp xp, ParticleSystem particleSystem)
+        {
+            if (Util.CollideByBox(paddle, xp))
+            {
+                Trace.WriteLine("collision with XP");
+                ServiceLocator.Xp += 5;
+                xp.ToRemove = true;
+                // Explosion
+                xp.Color = new Color(255f, 206f, 0f, 256f);
+                Vector2 ExplositionLocation = new Vector2(xp.X, xp.Y);
+                particleSystem.CreateExplosion(xp.Color, ExplositionLocation, numberOfParticles: 20, ParticleSystem.ParticleEmitterType.Brick);
             }
         }
     }

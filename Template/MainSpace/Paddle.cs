@@ -11,7 +11,6 @@ namespace MainSpace
 {
     public class Paddle : Sprite
     {
-        protected const int DIST_FROM_BOTTOM_SCREEN = 55;
         public Paddle(Texture2D pTexture, Color color) : base(pTexture, color)
         {
 
@@ -24,7 +23,7 @@ namespace MainSpace
         public void Load()
         {
             // Paddle Loading
-            Position = new Vector2(si.Width / 2, si.Height - DIST_FROM_BOTTOM_SCREEN);
+            Position = new Vector2(si.Width / 2, si.Height - ServiceLocator.DIST_FROM_BOTTOM_SCREEN);
             Velocity = new Vector2(8, 0);
         }
     }

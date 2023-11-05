@@ -32,5 +32,13 @@ namespace MainSpace
 
         public int targetW = 1280;
         public int targetH = 720;
+
+        public int screenRatio
+        {
+            get
+            {
+                return Width / targetW;
+            }
+        }
     }
 }

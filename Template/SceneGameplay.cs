@@ -54,6 +54,7 @@ namespace MainSpace
             listParticleTextures.Add(am.TexStarParticle);
             listParticleTextures.Add(am.TexDiamondParticle);
             particleSystem = new ParticleSystem(listParticleTextures, Vector2.Zero);
+            ServiceLocator.Level = 1;
         }
 
         public override void Load()
@@ -80,10 +81,10 @@ namespace MainSpace
                 leftBorder.X + leftBorder.Width + am.TexWhiteBrick.Width / 2, // to start below the borders
                 topBorder.Y + topBorder.Height + am.TexWhiteBrick.Height / 2, 5, 
                 9, // Number of columns
-                9, // Number of starting rows
-                18); // Total number of rows
+                12, // Number of starting rows
+                36); // Total number of rows
 
-            //Brick.RemoveRandomBricks(listActors,0);
+            Brick.RemoveRandomBricks(listActors,20);
 
             // Collision Manager Loading
             CollisionManager = new CollisionManager(listActors);
@@ -165,7 +166,7 @@ namespace MainSpace
             // Manage Collisions
             if (particleSystem != null) 
             {
-                particleSystem.Update(ParticleSystem.ParticleEmitterType.Brick);
+                particleSystem.UpdateBricksParticle(ParticleSystem.ParticleEmitterType.Brick);
             }
             CollisionManager.Update(particleSystem);
 
@@ -179,12 +180,31 @@ namespace MainSpace
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             /*
-            spriteBatch.DrawString(am.MainFont, "nb balls: " + listActors.OfType<Ball>().Count().ToString(), new Vector2(1, 1), Color.White);
+            
             spriteBatch.DrawString(am.MainFont, "nb actors: " + listActors.Count().ToString(), new Vector2(1, 30), Color.White);
             spriteBatch.DrawString(am.MainFont, "paddle.x :" + paddle.X, new Vector2(1, 60), Color.White);
             */
+
+            float xpNeeded = 20;
+            float xpRatio = (float)ServiceLocator.Xp / xpNeeded;
+            if (xpRatio >= 1)
+            {
+                ServiceLocator.Xp -= (int)xpNeeded;
+                ServiceLocator.Level++;
+            }
+
+            //spriteBatch.DrawString(am.MainFont, "nb Xp on screen: " + listActors.OfType<Xp>().Count().ToString(), new Vector2(1, 1), Color.White);
+            spriteBatch.DrawString(am.MainFont, "Level " + ServiceLocator.Level, new Vector2(200, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 80), Color.White);
+            spriteBatch.DrawString(am.MainFont, "Xp : " + ServiceLocator.Xp + " / " + (int)xpNeeded, new Vector2(200, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 50), Color.White);
             if (particleSystem != null)
                 particleSystem.Draw(spriteBatch);
+
+            Rectangle xpBarBorder = new Rectangle(200, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - am.TexXpBarBorder.Height / 2, am.TexXpBarBorder.Width, am.TexXpBarBorder.Height);
+            spriteBatch.Draw(am.TexXpBarBorder, xpBarBorder, Color.White);
+
+           
+            Rectangle xpBar = new Rectangle(204, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - am.TexXpBarBorder.Height / 2, (int)(am.TexXpBarBorder.Width * xpRatio), am.TexXpBarGreen.Height);
+            spriteBatch.Draw(am.TexXpBarGreen, xpBar, Color.White);
 
             base.Draw(gameTime, spriteBatch);
         }
