@@ -17,7 +17,7 @@ namespace MainSpace
         private readonly List<Brick> listBricks = new List<Brick>();
         private readonly List<Xp> listXp = new List<Xp>();
         private Paddle paddle;
-        private Border leftBorder, rightBorder, topBorder;
+        private Border leftBorder, rightBorder, topBorder, redLine;
         public CollisionManager(List<IActor> pListActors)
         {
             listActors = pListActors;
@@ -27,6 +27,7 @@ namespace MainSpace
             leftBorder = listActors.OfType<Border>().FirstOrDefault(b => b.Side == Border.BorderSide.Left);
             rightBorder = listActors.OfType<Border>().FirstOrDefault(b => b.Side == Border.BorderSide.Right);
             topBorder = listActors.OfType<Border>().FirstOrDefault(b => b.Side == Border.BorderSide.Top);
+            redLine = listActors.OfType<Border>().FirstOrDefault(b => b.Side == Border.BorderSide.None);
         }
 
         public void Update(ParticleSystem particleSystem)
@@ -61,7 +62,7 @@ namespace MainSpace
                 }
 
                 // Collision with bottom screen
-                if (ball.Y > si.Height + 200) // 200 to allow the trail to not disappear
+                if (ball.Y > si.targetH + 200) // 200 to allow the trail to not disappear
                 {
                     ball.ToRemove = true;
                 }
@@ -72,10 +73,16 @@ namespace MainSpace
                 CheckXpCollision(paddle, xp, particleSystem);
 
                 // Collision with bottom screen
-                if (xp.Y > si.Height + xp.Width)
+                if (xp.Y > si.targetH + xp.Width)
                 {
                     xp.ToRemove = true;
                 }
+            }
+
+            // Check bricks collision with red line
+            foreach (Brick brick in listBricks)
+            {
+                CheckBrickCollision(brick, particleSystem);
             }
 
         }
@@ -141,10 +148,12 @@ namespace MainSpace
         {
             if (Util.CollideByBox(ball, brick))
             {
+
                 // Check for side collision first
                 bool sideCollision = ball.PreviousPosition.X < brick.BoundingBox.Left || ball.PreviousPosition.X > brick.BoundingBox.Right;
 
                 if (sideCollision)
+
                 {
                     ball.Velocity = new Vector2(-ball.Velocity.X, ball.Velocity.Y);
 
@@ -194,6 +203,20 @@ namespace MainSpace
                 }
             }
         }
+
+        public void CheckBrickCollision(Brick brick, ParticleSystem particleSystem)
+        {
+            if (Util.CollideBottomWithTop(redLine, brick)) // Check if the bottom of the line collides with the top of the brick
+            {
+                ServiceLocator.LoseHealth();
+                brick.ToRemove = true;
+
+                // Explosion
+                Vector2 ExplositionLocation = new Vector2(brick.X, brick.Y);
+                particleSystem.CreateExplosion(brick.Color, ExplositionLocation, numberOfParticles: 20, ParticleSystem.ParticleEmitterType.Brick);
+            }
+        }
+
         public void CheckXpCollision(Paddle paddle, Xp xp, ParticleSystem particleSystem)
         {
             if (Util.CollideByBox(paddle, xp))

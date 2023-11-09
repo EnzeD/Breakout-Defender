@@ -26,7 +26,7 @@ namespace MainSpace
         {
             paddle = pPaddle;
             Position = new Vector2(paddle.Position.X, paddle.Position.Y - Height);
-            Speed = 8;
+            Speed = 5;
             Velocity = new Vector2(1, -1);
             float speedRatio = Speed / Velocity.Length(); // To make sure Velocity = Speed
             Velocity *= speedRatio;

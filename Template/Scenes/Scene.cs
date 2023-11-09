@@ -12,6 +12,7 @@ namespace MainSpace
     {
         protected MainGame mainGame;
         protected List<IActor> listActors;
+        SpriteBatch sb = ServiceLocator.GetService<SpriteBatch>();
 
         public Scene(MainGame pGame)
         {
@@ -36,8 +37,7 @@ namespace MainSpace
 
         public virtual void Update(GameTime gameTime) 
         {
-
-
+            // We update all actors
             foreach (IActor actor in listActors) 
             { 
                 actor.Update(gameTime); 
@@ -46,6 +46,7 @@ namespace MainSpace
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            // We draw all actor, but we draw the borders first to be on top of bricks ;)
             List<IActor> sortedActors = listActors.OrderBy(actor => actor is Border).ToList();
             foreach (IActor actor in sortedActors)
             {

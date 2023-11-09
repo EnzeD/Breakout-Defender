@@ -15,6 +15,8 @@ namespace MainSpace
 
         private static readonly Random random = new Random();
 
+        public float brickSpeed = 0.3f;
+
         public Brick(Texture2D pTexture, Color color, bool isCentered = true) : base(pTexture, color, isCentered)
         {
             
@@ -100,7 +102,7 @@ namespace MainSpace
         }
         public override void Update(GameTime pGameTime)
         {
-            Position += new Vector2(0, 0.1f);
+            Position += new Vector2(0, brickSpeed);
             if (Position.Y >= 55)
             {
                 isVisible = true;

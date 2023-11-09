@@ -34,11 +34,17 @@ namespace MainSpace
         public Border topBorder = new Border(am.TexWhiteVerticalBar, Border.BorderSide.Top, Color.White);
         public Border leftBorder = new Border(am.TexWhiteLateralBar, Border.BorderSide.Left, Color.White);
         public Border rightBorder = new Border(am.TexWhiteLateralBar, Border.BorderSide.Right, Color.White);
+        public Border redLine = new Border(am.TexRedLine, Border.BorderSide.None, Color.White * 0.5f);
 
         // Bricks
         public Brick brick1 = new Brick(am.TexWhiteBrick, Color.White, true);
         public Brick brick2 = new Brick(am.TexWhiteBrick, Color.White, true);
         public List<Brick> listBricks;
+        private int nbColumns = 9;
+        private int nbStartingRows = 6;
+        private int nbTotalRows = 36;
+        private int spacing = 5;
+        private float percentBricksToDisplay = 0.1f;
 
         // Particles
         List<Texture2D> listParticleTextures = new List<Texture2D>();
@@ -46,6 +52,9 @@ namespace MainSpace
 
         // Collision Manager
         public CollisionManager CollisionManager;
+
+        // GUI
+        private Health health;
 
         public SceneGameplay(MainGame pGame) : base(pGame)
         {
@@ -71,20 +80,28 @@ namespace MainSpace
             topBorder.LoadBorder(Border.BorderSide.Top);
             leftBorder.LoadBorder(Border.BorderSide.Left);
             rightBorder.LoadBorder(Border.BorderSide.Right);
+            redLine.LoadBorder(Border.BorderSide.None);
+
             listActors.Add(topBorder);
             listActors.Add(leftBorder);
             listActors.Add(rightBorder);
+            listActors.Add(redLine);
 
             // Bricks Loading
             listBricks = Brick.CreateBricks(
                 listActors, am.TexWhiteBrick, 
-                leftBorder.X + leftBorder.Width + am.TexWhiteBrick.Width / 2, // to start below the borders
-                topBorder.Y + topBorder.Height + am.TexWhiteBrick.Height / 2, 5, 
-                9, // Number of columns
-                12, // Number of starting rows
-                36); // Total number of rows
+                leftBorder.X + leftBorder.Width + am.TexWhiteBrick.Width / 2, // to start just below the borders
+                topBorder.Y + topBorder.Height + am.TexWhiteBrick.Height / 2,
+                spacing, // Spacing in pixels between bricks
+                nbColumns, // Number of columns
+                nbStartingRows, // Number of starting rows
+                nbTotalRows); // Total number of rows
 
-            Brick.RemoveRandomBricks(listActors,20);
+            Brick.RemoveRandomBricks(listActors, (int)(nbTotalRows * nbColumns * (1 -percentBricksToDisplay)));
+
+            // Health GUI
+            health = new Health(mainGame);
+            ServiceLocator.InitializeHealth(health);
 
             // Collision Manager Loading
             CollisionManager = new CollisionManager(listActors);
@@ -170,6 +187,9 @@ namespace MainSpace
             }
             CollisionManager.Update(particleSystem);
 
+            // Heart update
+            health.UpdateHearts(gameTime);
+
 
             // Clean sprites being tagged as to remove
             Clean();
@@ -185,6 +205,8 @@ namespace MainSpace
             spriteBatch.DrawString(am.MainFont, "paddle.x :" + paddle.X, new Vector2(1, 60), Color.White);
             */
 
+
+            // TO DO : manage XP display elsewhere
             float xpNeeded = 20;
             float xpRatio = (float)ServiceLocator.Xp / xpNeeded;
             if (xpRatio >= 1)
@@ -193,9 +215,16 @@ namespace MainSpace
                 ServiceLocator.Level++;
             }
 
+            // Health
+            health.DrawHearts();
+
+            // Red background
+            //spriteBatch.Draw(am.TexRedFlash, new Vector2(si.targetW / 3 + 20, 65), Color.White * 0.25f);
+
+
             //spriteBatch.DrawString(am.MainFont, "nb Xp on screen: " + listActors.OfType<Xp>().Count().ToString(), new Vector2(1, 1), Color.White);
-            spriteBatch.DrawString(am.MainFont, "Level " + ServiceLocator.Level, new Vector2(200, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 80), Color.White);
-            spriteBatch.DrawString(am.MainFont, "Xp : " + ServiceLocator.Xp + " / " + (int)xpNeeded, new Vector2(200, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 50), Color.White);
+            spriteBatch.DrawString(am.MainFont, "Level " + ServiceLocator.Level, new Vector2(200, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 70), Color.White);
+            spriteBatch.DrawString(am.MainFont, "Xp : " + ServiceLocator.Xp + " / " + (int)xpNeeded, new Vector2(200, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 40), Color.White);
             if (particleSystem != null)
                 particleSystem.Draw(spriteBatch);
 

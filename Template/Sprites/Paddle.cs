@@ -23,8 +23,8 @@ namespace MainSpace
         public void Load()
         {
             // Paddle Loading
-            Position = new Vector2(si.Width / 2, si.Height - ServiceLocator.DIST_FROM_BOTTOM_SCREEN);
-            Velocity = new Vector2(8, 0);
+            Position = new Vector2(si.targetW / 2, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN);
+            Velocity = new Vector2(5, 0);
         }
     }
 }

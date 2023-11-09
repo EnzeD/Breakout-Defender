@@ -41,6 +41,9 @@ namespace MainSpace
         public Texture2D TexYellowSquare { get { return _Content.Load<Texture2D>("yellow square"); } }
         public Texture2D TexXpBarBorder { get { return _Content.Load<Texture2D>("white xp bar border"); } }
         public Texture2D TexXpBarGreen { get { return _Content.Load<Texture2D>("green xp bar"); } }
+        public Texture2D TexRedLine { get { return _Content.Load<Texture2D>("red line"); } }
+        public Texture2D TexHeart { get { return _Content.Load<Texture2D>("heart"); } }
+        public Texture2D TexRedFlash { get { return _Content.Load<Texture2D>("red flash"); } }
 
 
     }

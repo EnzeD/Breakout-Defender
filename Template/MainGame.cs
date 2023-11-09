@@ -22,6 +22,7 @@ namespace MainSpace
         public MainGame()
         {
             _graphics = new GraphicsDeviceManager(this);
+
             // Services Init
             ScreenInfo screenInfo = new ScreenInfo(_graphics);
             ServiceLocator.RegisterService<ScreenInfo>(screenInfo);
@@ -29,9 +30,10 @@ namespace MainSpace
             AssetManager assetManager = new AssetManager(Content);
             ServiceLocator.RegisterService<AssetManager>(assetManager);
 
-            Spritebatch spriteBatch = new Spritebatch(_spriteBatch);
-            ServiceLocator.RegisterService<Spritebatch>(spriteBatch);
+            ServiceLocator.RegisterService<SpriteBatch>(_spriteBatch);
+            SpriteBatch sb = ServiceLocator.GetService<SpriteBatch>(); // TO DO: switch to service locator for spritebatch instead of passing mainGame
 
+            // Screen settings
             _graphics.PreferredBackBufferWidth = TargetWidth;
             _graphics.PreferredBackBufferHeight = TargetHeight;
             _graphics.IsFullScreen = false;
@@ -76,7 +78,7 @@ namespace MainSpace
                 gameState.CurrentScene.Update(gameTime);
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.S) && !oldKBState.IsKeyDown(Keys.S))
+            if (Keyboard.GetState().IsKeyDown(Keys.W) && !oldKBState.IsKeyDown(Keys.W))
             {
                 bSampling = !bSampling;
             }

@@ -25,5 +25,19 @@ namespace MainSpace
         {
             return p1.BoundingBox.Intersects(p2.BoundingBox);
         }
+        public static bool CollideBottomWithTop(IActor p1, IActor p2)
+        {
+            if (p1.BoundingBox.Intersects(p2.BoundingBox))
+            {
+                int bottomOfP1 = p1.BoundingBox.Bottom;
+                int topOfP2 = p2.BoundingBox.Top;
+
+                if (bottomOfP1 >= topOfP2 && p1.BoundingBox.Top < topOfP2)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

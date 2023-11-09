@@ -10,6 +10,9 @@ namespace MainSpace
 {
     public abstract class Sprite : IActor
     {
+        // Service Locator
+        SpriteBatch sb = ServiceLocator.GetService<SpriteBatch>();
+
         // Sprite Properties
         public Vector2 Position { get; set; }
         public Texture2D Texture { get; set; }
