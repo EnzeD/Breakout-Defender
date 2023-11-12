@@ -23,6 +23,7 @@ namespace MainSpace
         public Vector2 Velocity { get; set; }
         public Color Color { get; set; }
         public bool isVisible = true;
+        public float WidthScale { get; set; } = 1f;
 
         // To make it easier to get values
         public int Width { get { return Texture.Width; } }
@@ -75,18 +76,22 @@ namespace MainSpace
         public virtual void Update(GameTime pGameTime)
         {
             BoundingBox = new Rectangle(
-                IsCentered ? (int)Position.X - Texture.Width / 2 : (int)Position.X,
+                IsCentered ? (int)Position.X - (int)(Texture.Width * WidthScale) / 2 : (int)Position.X,
                 IsCentered ? (int)Position.Y - Texture.Height / 2 : (int)Position.Y,
-                Texture.Width,
+                (int)(Texture.Width * WidthScale),
                 Texture.Height
-                );
+            );
         }
 
         // Draw
         public virtual void Draw(SpriteBatch pSpriteBatch)
         {
             if (isVisible)
-                pSpriteBatch.Draw(Texture, Position, null, Color, 0, Origin, 1, SpriteEffects.None, 0);
+            {
+                Vector2 scale = new Vector2(WidthScale, 1);
+                pSpriteBatch.Draw(Texture, Position, null, Color, 0, Origin, scale, SpriteEffects.None, 0);
+            }
+
         }
     }
 }

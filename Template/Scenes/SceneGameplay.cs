@@ -41,8 +41,8 @@ namespace MainSpace
         public Brick brick2 = new Brick(am.TexWhiteBrick, Color.White, true);
         public List<Brick> listBricks;
         private int nbColumns = 9;
-        private int nbStartingRows = 6;
-        private int nbTotalRows = 36;
+        private int nbStartingRows = 3;
+        private int nbTotalRows = 72;
         private int spacing = 5;
         private float percentBricksToDisplay = 0.1f;
 
@@ -55,6 +55,13 @@ namespace MainSpace
 
         // GUI
         private Health health;
+        private Upgrader upgrader;
+        private Background background;
+        private bool isPaused = false;
+        private bool drawUpgrades = false;
+
+        // Music
+        private Song music = am.Music3Loop;
 
         public SceneGameplay(MainGame pGame) : base(pGame)
         {
@@ -90,7 +97,7 @@ namespace MainSpace
             // Bricks Loading
             listBricks = Brick.CreateBricks(
                 listActors, am.TexWhiteBrick, 
-                leftBorder.X + leftBorder.Width + am.TexWhiteBrick.Width / 2, // to start just below the borders
+                leftBorder.X + leftBorder.Width / 2 + am.TexWhiteBrick.Width / 2, // to start just below the borders
                 topBorder.Y + topBorder.Height + am.TexWhiteBrick.Height / 2,
                 spacing, // Spacing in pixels between bricks
                 nbColumns, // Number of columns
@@ -102,9 +109,16 @@ namespace MainSpace
             // Health GUI
             health = new Health(mainGame);
             ServiceLocator.InitializeHealth(health);
+            upgrader = new Upgrader(mainGame, listActors);
+            background = new Background(mainGame);
 
             // Collision Manager Loading
             CollisionManager = new CollisionManager(listActors);
+
+            // Music
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(music);
+            MediaPlayer.Volume = 0.1f;
 
             // Keyboard & Gamepad old states
             oldKBState = Keyboard.GetState();
@@ -128,82 +142,128 @@ namespace MainSpace
             GamePadState newGPState;
             GamePadCapabilities capabilities = GamePad.GetCapabilities(PlayerIndex.One);
 
-            // Paddle movement
-            if (newKBState.IsKeyDown(Keys.Left) || ButLeft)
+            // Pause Management
+            if (newKBState.IsKeyDown(Keys.U) && !oldKBState.IsKeyDown(Keys.U))
             {
-                if (paddle.BoundingBox.Left >= leftBorder.Position.X + leftBorder.Width)
-                    paddle.Move(- paddle.Velocity);
+                ServiceLocator.Level++;
+                upgrader.ResetCloseMenuState();
+                upgrader.ShowLevelUpOptions();
+                drawUpgrades = true;
+                isPaused = true;
             }
-            if (newKBState.IsKeyDown(Keys.Right) || ButRight)
+
+            // Pause Management
+            if (newKBState.IsKeyDown(Keys.P) && !oldKBState.IsKeyDown(Keys.P))
             {
-                if (paddle.BoundingBox.Right <= rightBorder.Position.X)
-                    paddle.Move(paddle.Velocity);
-            }
-            if (newKBState.IsKeyDown(Keys.Enter) || ButA)
-            {
-                foreach(IActor actor in listActors)
+                if(isPaused)
                 {
-                    if (actor is Ball ball)
+                    isPaused = false;
+                }
+                else
+                {
+                    isPaused = true;
+                }
+            }
+            if (isPaused == false)
+            {
+                // Paddle movement
+                if (newKBState.IsKeyDown(Keys.Left) || ButLeft)
+                {
+                    if (paddle.BoundingBox.Left >= leftBorder.Position.X + leftBorder.Width / 2)
+                        paddle.Move(-paddle.Velocity);
+                }
+                if (newKBState.IsKeyDown(Keys.Right) || ButRight)
+                {
+                    if (paddle.BoundingBox.Right <= rightBorder.Position.X - rightBorder.Width / 2)
+                        paddle.Move(paddle.Velocity);
+                }
+                if (newKBState.IsKeyDown(Keys.Enter) || ButA)
+                {
+                    foreach (IActor actor in listActors)
                     {
-                        ball.bIsLaunched = true;
+                        if (actor is Ball ball)
+                        {
+                            ball.bIsLaunched = true;
+                        }
                     }
+
+                }
+                if (newKBState.IsKeyDown(Keys.S) && !oldKBState.IsKeyDown(Keys.S))
+                {
+                    Ball b = new Ball(am.TexWhiteCirle, paddle, Color.White, true);
+                    //b.Position = new Vector2(paddle.X, paddle.Y - 30);
+                    listActors.Add(b);
+                }
+                if (newKBState.IsKeyDown(Keys.D) /*&& !oldKBState.IsKeyDown(Keys.D)*/)
+                {
+                    Ball b = new Ball(am.TexWhiteCirle, paddle, Color.White, true);
+                    b.bIsLaunched = true;
+                    listActors.Add(b);
                 }
                 
+
+                // Gamepad Management
+                if (capabilities.IsConnected)
+                {
+                    newGPState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.IndependentAxes);
+                    if (newGPState.IsButtonDown(Buttons.LeftThumbstickLeft) && !oldGPState.IsButtonDown(Buttons.LeftThumbstickLeft))
+                        ButLeft = true;
+                    if (newGPState.IsButtonDown(Buttons.LeftThumbstickRight) && !oldGPState.IsButtonDown(Buttons.LeftThumbstickRight))
+                        ButRight = true;
+                    if (newGPState.IsButtonDown(Buttons.A) && !oldGPState.IsButtonDown(Buttons.A))
+                        ButA = true;
+
+                    oldGPState = newGPState;
+                }
+
+                // Manage Collisions
+                if (particleSystem != null)
+                {
+                    particleSystem.UpdateBricksParticle(ParticleSystem.ParticleEmitterType.Brick);
+                }
+                CollisionManager.Update(particleSystem);
+
+                // Heart update
+                health.UpdateHearts(gameTime);
+
+                // Lost balls
+                foreach (var ball in listActors.OfType<Ball>())
+                {
+                    ball.UpdateRelaunchCooldown(gameTime);
+                }
+
+                // Bricks
+                Brick.UpdateBrickSpeed(gameTime);
+
+                // Clean sprites being tagged as to remove
+                Clean();
+
+                base.Update(gameTime);
             }
-            if (newKBState.IsKeyDown(Keys.S) && !oldKBState.IsKeyDown(Keys.S))
+            if (upgrader.ShouldCloseMenu())
             {
-                Ball b = new Ball(am.TexWhiteCirle, paddle, Color.White, true);
-                //b.Position = new Vector2(paddle.X, paddle.Y - 30);
-                Trace.WriteLine("new ball generated");
-                listActors.Add(b);
+                isPaused = false;
+                drawUpgrades = false;
             }
-            if (newKBState.IsKeyDown(Keys.D) /*&& !oldKBState.IsKeyDown(Keys.D)*/)
+            
+            if (drawUpgrades)
             {
-                Ball b = new Ball(am.TexWhiteCirle, paddle, Color.White, true);
-                b.bIsLaunched = true;
-                Trace.WriteLine("new ball generated");
-                listActors.Add(b);
+                upgrader.Update(gameTime);
             }
+
             oldKBState = newKBState;
-
-            // Gamepad Management
-            if (capabilities.IsConnected)
-            {
-                newGPState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.IndependentAxes);
-                if (newGPState.IsButtonDown(Buttons.LeftThumbstickLeft) && !oldGPState.IsButtonDown(Buttons.LeftThumbstickLeft))
-                    ButLeft = true;
-                if (newGPState.IsButtonDown(Buttons.LeftThumbstickRight) && !oldGPState.IsButtonDown(Buttons.LeftThumbstickRight))
-                    ButRight = true;
-                if (newGPState.IsButtonDown(Buttons.A) && !oldGPState.IsButtonDown(Buttons.A))
-                    ButA = true;
-
-                oldGPState = newGPState;
-            }
-
-            // Manage Collisions
-            if (particleSystem != null) 
-            {
-                particleSystem.UpdateBricksParticle(ParticleSystem.ParticleEmitterType.Brick);
-            }
-            CollisionManager.Update(particleSystem);
-
-            // Heart update
-            health.UpdateHearts(gameTime);
-
-
-            // Clean sprites being tagged as to remove
-            Clean();
-
-            base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            mainGame.GraphicsDevice.Clear(Color.Black);
             /*
             
             spriteBatch.DrawString(am.MainFont, "nb actors: " + listActors.Count().ToString(), new Vector2(1, 30), Color.White);
             spriteBatch.DrawString(am.MainFont, "paddle.x :" + paddle.X, new Vector2(1, 60), Color.White);
             */
+            if (!drawUpgrades)
+                background.Draw(gameTime);
 
 
             // TO DO : manage XP display elsewhere
@@ -213,6 +273,10 @@ namespace MainSpace
             {
                 ServiceLocator.Xp -= (int)xpNeeded;
                 ServiceLocator.Level++;
+                upgrader.ResetCloseMenuState();
+                upgrader.ShowLevelUpOptions();
+                drawUpgrades = true;
+                isPaused = true;
             }
 
             // Health
@@ -220,6 +284,9 @@ namespace MainSpace
 
             // Red background
             //spriteBatch.Draw(am.TexRedFlash, new Vector2(si.targetW / 3 + 20, 65), Color.White * 0.25f);
+
+            // Test abstract lines at the bottom
+            //spriteBatch.Draw(am.TextAbstractLines, new Vector2(si.targetW / 3 + 20, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 95), Color.White * 0.5f);
 
 
             //spriteBatch.DrawString(am.MainFont, "nb Xp on screen: " + listActors.OfType<Xp>().Count().ToString(), new Vector2(1, 1), Color.White);
@@ -236,6 +303,12 @@ namespace MainSpace
             spriteBatch.Draw(am.TexXpBarGreen, xpBar, Color.White);
 
             base.Draw(gameTime, spriteBatch);
+
+            if (drawUpgrades)
+            {
+                upgrader.Draw(gameTime);
+            }
         }
+      
     }
 }

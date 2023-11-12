@@ -19,15 +19,29 @@ namespace MainSpace
         
         Paddle paddle;
         public bool bIsLaunched = false;
-        public float Speed { get; private set; }
+        public bool IsLost { get; private set; }
+        public double TimeUntilRelaunch { get; private set; } = 5.0f;
+        public bool IsRelaunchScheduled { get; private set; }
+        private double relaunchCooldown;
+        public static int talBallsDesired = 1;
+        private static float baseSpeed = 5;
+        public static float BaseSpeed
+        {
+            get { return baseSpeed; }
+            set
+            {
+                baseSpeed = value;
+            }
+        }
+        public float Speed { get; set; }
         public Vector2 PreviousPosition { get; private set; }
         private static readonly Random random = new Random();
         public Ball(Texture2D pTexture, Paddle pPaddle, Color color, bool isCentered) : base(pTexture, color, isCentered)
         {
             paddle = pPaddle;
             Position = new Vector2(paddle.Position.X, paddle.Position.Y - Height);
-            Speed = 5;
             Velocity = new Vector2(1, -1);
+            Speed = BaseSpeed;
             float speedRatio = Speed / Velocity.Length(); // To make sure Velocity = Speed
             Velocity *= speedRatio;
             // Particles Loading
@@ -58,6 +72,7 @@ namespace MainSpace
             particleSystem.EmitterLocation = Position;
             particleSystem.UpdateBallsParticle(Position, ParticleSystem.ParticleEmitterType.Ball);
 
+
             base.Update(pGameTime);
             PreviousPosition = Position;
         }
@@ -66,6 +81,52 @@ namespace MainSpace
         {
             particleSystem.Draw(pSpriteBatch);
             base.Draw(pSpriteBatch);
+        }
+        public static void IncreaseBaseSpeed(float percentage)
+        {
+            BaseSpeed += BaseSpeed * percentage;
+        }
+        public void SetVelocityDirection()
+        {
+            Velocity = Vector2.Normalize(Velocity) * Speed;
+        }
+        public void MarkAsLost()
+        {
+            IsLost = true;
+            isVisible = false;
+        }
+        public void Relaunch()
+        {
+            IsRelaunchScheduled = false;
+            IsLost = false;
+            bIsLaunched = true;
+            isVisible = true;
+            Position = new Vector2(paddle.Position.X, paddle.Position.Y - Height);
+                                                                                  
+        }
+        public void ScheduleRelaunch(double delay)
+        {
+            IsRelaunchScheduled = true;
+            relaunchCooldown = delay;
+        }
+        public void UpdateRelaunchCooldown(GameTime gameTime)
+        {
+            if (IsRelaunchScheduled)
+            {
+                relaunchCooldown -= gameTime.ElapsedGameTime.TotalSeconds;
+                if (relaunchCooldown <= 0)
+                {
+                    Relaunch();
+                }
+            }
+        }
+        public void OnBallLost()
+        {
+            if (!IsRelaunchScheduled)
+            {
+                ScheduleRelaunch(5.0); 
+                isVisible = false;
+            }
         }
     }
 }

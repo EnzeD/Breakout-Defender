@@ -24,26 +24,55 @@ namespace MainSpace
 
         public static void Load(ContentManager pContent)
         {
-            MusicGameplay = pContent.Load<Song>("techno");
-            SoundExplode = pContent.Load<SoundEffect>("explode");
+            MusicGameplay = pContent.Load<Song>("musics/techno");
+            SoundExplode = pContent.Load<SoundEffect>("sounds/explode");
         }
 
-        public Song MusicMenu { get { return _Content.Load<Song>("cool"); } }
-        public SpriteFont MainFont { get { return _Content.Load<SpriteFont>("mainfont"); } }
-        public Texture2D TexWhiteRectangle { get { return _Content.Load<Texture2D>("white rectangle"); } }
-        public Texture2D TexWhiteCirle { get { return _Content.Load<Texture2D>("white circle"); } }
-        public Texture2D TexWhiteVerticalBar { get { return _Content.Load<Texture2D>("white vertical bar"); } }
-        public Texture2D TexWhiteLateralBar { get { return _Content.Load<Texture2D>("white lateral bar"); } }
-        public Texture2D TexWhiteBrick { get { return _Content.Load<Texture2D>("white brick"); } }
-        public Texture2D TexCircleParticle { get { return _Content.Load<Texture2D>("circle"); } }
-        public Texture2D TexStarParticle { get { return _Content.Load<Texture2D>("star"); } }
-        public Texture2D TexDiamondParticle { get { return _Content.Load<Texture2D>("diamond"); } }
-        public Texture2D TexYellowSquare { get { return _Content.Load<Texture2D>("yellow square"); } }
-        public Texture2D TexXpBarBorder { get { return _Content.Load<Texture2D>("white xp bar border"); } }
-        public Texture2D TexXpBarGreen { get { return _Content.Load<Texture2D>("green xp bar"); } }
-        public Texture2D TexRedLine { get { return _Content.Load<Texture2D>("red line"); } }
-        public Texture2D TexHeart { get { return _Content.Load<Texture2D>("heart"); } }
-        public Texture2D TexRedFlash { get { return _Content.Load<Texture2D>("red flash"); } }
+        // Musics
+        public Song MusicMenu { get { return _Content.Load<Song>("musics/cool"); } }
+        public Song Music1Loop { get { return _Content.Load<Song>("musics/music1loop"); } }
+        public Song Music2Loop { get { return _Content.Load<Song>("musics/music2loop"); } }
+        public Song Music3Loop { get { return _Content.Load<Song>("musics/music3loop"); } }
+        public Song Music4Loop { get { return _Content.Load<Song>("musics/music4loop"); } }
+        public Song Music5Loop { get { return _Content.Load<Song>("musics/music5loop"); } }
+        public Song Music6Loop { get { return _Content.Load<Song>("musics/music6loop"); } }
+        public Song Music7Loop { get { return _Content.Load<Song>("musics/music7loop"); } }
+
+        // SoundEffects
+        public SoundEffect SndBlip { get { return _Content.Load<SoundEffect>("sounds/blip"); } }
+        public SoundEffect SndPaddleBlip { get { return _Content.Load<SoundEffect>("sounds/paddleblip"); } }
+        public SoundEffect SndXp { get { return _Content.Load<SoundEffect>("sounds/xp"); } }
+        public SoundEffect SndBrickHit { get { return _Content.Load<SoundEffect>("sounds/brickhit"); } }
+        public SoundEffect SndBrickExplode { get { return _Content.Load<SoundEffect>("sounds/brickexplode"); } }
+
+        // Fonts
+        public SpriteFont MainFont { get { return _Content.Load<SpriteFont>("fonts/mainfont"); } }
+        public SpriteFont TitleFont { get { return _Content.Load<SpriteFont>("fonts/titlefont"); } }
+        public SpriteFont DescriptionFont { get { return _Content.Load<SpriteFont>("fonts/descriptionfont"); } }
+
+        // Textures
+        public Texture2D TexWhiteRectangle { get { return _Content.Load<Texture2D>("textures/white rectangle"); } }
+        public Texture2D TexWhiteCirle { get { return _Content.Load<Texture2D>("textures/white circle"); } }
+        public Texture2D TexWhiteVerticalBar { get { return _Content.Load<Texture2D>("textures/white vertical bar"); } }
+        public Texture2D TexWhiteLateralBar { get { return _Content.Load<Texture2D>("textures/white lateral bar"); } }
+        public Texture2D TexWhiteBrick { get { return _Content.Load<Texture2D>("textures/white brick"); } }
+        public Texture2D TexCircleParticle { get { return _Content.Load<Texture2D>("textures/circle"); } }
+        public Texture2D TexStarParticle { get { return _Content.Load<Texture2D>("textures/star"); } }
+        public Texture2D TexDiamondParticle { get { return _Content.Load<Texture2D>("textures/diamond"); } }
+        public Texture2D TexYellowSquare { get { return _Content.Load<Texture2D>("textures/yellow square"); } }
+        public Texture2D TexXpBarBorder { get { return _Content.Load<Texture2D>("textures/white xp bar border"); } }
+        public Texture2D TexXpBarGreen { get { return _Content.Load<Texture2D>("textures/green xp bar"); } }
+        public Texture2D TexRedLine { get { return _Content.Load<Texture2D>("textures/red line"); } }
+        public Texture2D TexHeart { get { return _Content.Load<Texture2D>("textures/heart"); } }
+        public Texture2D TexRedFlash { get { return _Content.Load<Texture2D>("textures/red flash"); } }
+        public Texture2D TexAbstractLines { get { return _Content.Load<Texture2D>("textures/abstractlines"); } }
+        public Texture2D TexBackground { get { return _Content.Load<Texture2D>("textures/background"); } }
+        public Texture2D TexAddBall { get { return _Content.Load<Texture2D>("textures/addball"); } }
+        public Texture2D TexExtendPaddle { get { return _Content.Load<Texture2D>("textures/extendpaddle"); } }
+        public Texture2D TexSpeedBall { get { return _Content.Load<Texture2D>("textures/speedball"); } }
+        public Texture2D TexUpgradeBorders { get { return _Content.Load<Texture2D>("textures/powerup rectangle"); } }
+        public Texture2D TexUpgradeBackground { get { return _Content.Load<Texture2D>("textures/upgrade rectangle"); } }
+        public Texture2D TexPaddleSpeed { get { return _Content.Load<Texture2D>("textures/speedpaddle"); } }
 
 
     }

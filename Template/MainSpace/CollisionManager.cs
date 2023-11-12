@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,6 +19,7 @@ namespace MainSpace
         private readonly List<Xp> listXp = new List<Xp>();
         private Paddle paddle;
         private Border leftBorder, rightBorder, topBorder, redLine;
+        private float soundEffectsVolume = 0.1f;
         public CollisionManager(List<IActor> pListActors)
         {
             listActors = pListActors;
@@ -64,7 +66,7 @@ namespace MainSpace
                 // Collision with bottom screen
                 if (ball.Y > si.targetH + 200) // 200 to allow the trail to not disappear
                 {
-                    ball.ToRemove = true;
+                    ball.OnBallLost();
                 }
             }
             // Collisions with game borders
@@ -95,18 +97,21 @@ namespace MainSpace
             {
                 ball.Position = new Vector2(leftBorder.BoundingBox.Right + ball.Width / 2, ball.Position.Y);
                 ball.Velocity *= new Vector2(-1, 1);
+                PlayCollisionSound(soundEffectsVolume); 
             }
 
             if (Util.CollideByBox(ball, rightBorder))
             {
                 ball.Position = new Vector2(rightBorder.BoundingBox.Left - ball.Width / 2, ball.Position.Y);
                 ball.Velocity *= new Vector2(-1, 1);
+                PlayCollisionSound(soundEffectsVolume);
             }
 
             if (Util.CollideByBox(ball, topBorder))
             {
                 ball.Position = new Vector2(ball.Position.X, topBorder.BoundingBox.Bottom + ball.Height / 2);
                 ball.Velocity *= new Vector2(1, -1);
+                PlayCollisionSound(soundEffectsVolume);
             }
         }
 
@@ -141,6 +146,7 @@ namespace MainSpace
                 ball.Velocity = new Vector2(vx, vy);
                 float speedRatio = ball.Speed / ball.Velocity.Length(); // To keep the same speed at all time
                 ball.Velocity *= speedRatio;
+                am.SndPaddleBlip.Play(soundEffectsVolume, 0.0f, 0.0f);
             }
         }
 
@@ -152,7 +158,65 @@ namespace MainSpace
                 // Check for side collision first
                 bool sideCollision = ball.PreviousPosition.X < brick.BoundingBox.Left || ball.PreviousPosition.X > brick.BoundingBox.Right;
 
-                if (sideCollision)
+                // Check for top or bottom collision
+                bool topBottomCollision = ball.PreviousPosition.Y < brick.BoundingBox.Top ||
+                                          ball.PreviousPosition.Y > brick.BoundingBox.Bottom;
+
+                // Check for corner collision
+                bool cornerCollision = sideCollision && topBottomCollision;
+                if (cornerCollision)
+                {
+                    // Determine the direction of the ball
+                    bool movingLeft = ball.Velocity.X < 0;
+                    bool movingRight = ball.Velocity.X > 0;
+                    bool movingUp = ball.Velocity.Y < 0;
+                    bool movingDown = ball.Velocity.Y > 0;
+
+                    // Top left corner
+                    if (ball.Position.X < brick.BoundingBox.Left && ball.Position.Y < brick.BoundingBox.Top)
+                    {
+                        if (movingRight && movingDown)
+                            ball.Velocity = new Vector2(ball.Velocity.X, -ball.Velocity.Y);
+                        else if (movingRight && movingUp)
+                            ball.Velocity = new Vector2(-ball.Velocity.X, ball.Velocity.Y);
+                        else if (movingLeft && movingDown)
+                            ball.Velocity = new Vector2(ball.Velocity.X, -ball.Velocity.Y);
+                    }
+
+                    // Top right corner
+                    else if (ball.Position.X > brick.BoundingBox.Right && ball.Position.Y < brick.BoundingBox.Top)
+                    {
+                        if (movingLeft && movingDown)
+                            ball.Velocity = new Vector2(ball.Velocity.X, -ball.Velocity.Y);
+                        else if (movingRight && movingDown)
+                            ball.Velocity = new Vector2(ball.Velocity.X, -ball.Velocity.Y);
+                        else if (movingLeft && movingUp)
+                            ball.Velocity = new Vector2(-ball.Velocity.X, ball.Velocity.Y);
+                    }
+                    // Bottom left corner
+                    else if (ball.Position.X < brick.BoundingBox.Left && ball.Position.Y > brick.BoundingBox.Bottom)
+                    {
+                        if (movingRight && movingUp)
+                            ball.Velocity = new Vector2(ball.Velocity.X, -ball.Velocity.Y);
+                        else if (movingLeft && movingDown)
+                            ball.Velocity = new Vector2(-ball.Velocity.X, ball.Velocity.Y);
+                        else if (movingLeft && movingUp)
+                            ball.Velocity = new Vector2(ball.Velocity.X, -ball.Velocity.Y);
+                    }
+                    // Bottom right corner
+                    else if (ball.Position.X > brick.BoundingBox.Right && ball.Position.Y > brick.BoundingBox.Bottom)
+                    {
+                        if (movingLeft && movingUp)
+                            ball.Velocity = new Vector2(ball.Velocity.X, -ball.Velocity.Y);
+                        else if (movingRight && movingUp)
+                            ball.Velocity = new Vector2(ball.Velocity.X, -ball.Velocity.Y);
+                        else if (movingRight && movingDown)
+                            ball.Velocity = new Vector2(-ball.Velocity.X, ball.Velocity.Y);
+                    }
+                    // Reposition ball based on corner hit
+                    ball.Position = AdjustBallPositionAfterCornerCollision(ball, brick);
+                }
+                else if (sideCollision)
 
                 {
                     ball.Velocity = new Vector2(-ball.Velocity.X, ball.Velocity.Y);
@@ -168,7 +232,7 @@ namespace MainSpace
                     }
                 }
                 // Top or bottom collision
-                else
+                else if (topBottomCollision)
                 {
                     ball.Velocity = new Vector2(ball.Velocity.X, -ball.Velocity.Y);
 
@@ -182,7 +246,7 @@ namespace MainSpace
                         ball.Position = new Vector2(ball.Position.X, brick.BoundingBox.Bottom + ball.Height / 2);
                     }
                 }
-
+                PlayCollisionSound(soundEffectsVolume);
                 // Remove the brick
                 brick.ToRemove = true;
 
@@ -194,14 +258,46 @@ namespace MainSpace
 
                     // Xp
                     Random random = new Random();
-                    int rnd = random.Next(0, 5);
+                    int rnd = random.Next(0, 4);
                     if (rnd == 0)
                     {
                         Xp xp = new Xp(am.TexYellowSquare, Color.White, ExplositionLocation, true);
                         listActors.Add(xp);
                     }
+                    am.SndBrickExplode.Play(soundEffectsVolume, 0.0f, 0.0f);
+                }
+                else
+                {
+                    am.SndBrickHit.Play(soundEffectsVolume, 0.0f, 0.0f);
                 }
             }
+        }
+
+        // A helper method to adjust the ball's position after a corner collision
+        Vector2 AdjustBallPositionAfterCornerCollision(Ball ball, Brick brick)
+        {
+            // Calculate half dimensions
+            float halfBallWidth = ball.Width / 2;
+            float halfBallHeight = ball.Height / 2;
+
+            // Determine the correct position adjustment
+            if (ball.Position.X < brick.BoundingBox.Left && ball.Position.Y < brick.BoundingBox.Top)
+            {
+                return new Vector2(brick.BoundingBox.Left - halfBallWidth, brick.BoundingBox.Top - halfBallHeight);
+            }
+            else if (ball.Position.X > brick.BoundingBox.Right && ball.Position.Y < brick.BoundingBox.Top)
+            {
+                return new Vector2(brick.BoundingBox.Right + halfBallWidth, brick.BoundingBox.Top - halfBallHeight);
+            }
+            else if (ball.Position.X < brick.BoundingBox.Left && ball.Position.Y > brick.BoundingBox.Bottom)
+            {
+                return new Vector2(brick.BoundingBox.Left - halfBallWidth, brick.BoundingBox.Bottom + halfBallHeight);
+            }
+            else if (ball.Position.X > brick.BoundingBox.Right && ball.Position.Y > brick.BoundingBox.Bottom)
+            {
+                return new Vector2(brick.BoundingBox.Right + halfBallWidth, brick.BoundingBox.Bottom + halfBallHeight);
+            }
+            return ball.Position; // Default return, in case no corner collision was detected
         }
 
         public void CheckBrickCollision(Brick brick, ParticleSystem particleSystem)
@@ -221,14 +317,23 @@ namespace MainSpace
         {
             if (Util.CollideByBox(paddle, xp))
             {
-                Trace.WriteLine("collision with XP");
                 ServiceLocator.Xp += 5;
                 xp.ToRemove = true;
+                am.SndXp.Play(soundEffectsVolume, 0.0f, 0.0f);
                 // Explosion
                 xp.Color = new Color(255f, 206f, 0f, 256f);
                 Vector2 ExplositionLocation = new Vector2(xp.X, xp.Y);
                 particleSystem.CreateExplosion(xp.Color, ExplositionLocation, numberOfParticles: 20, ParticleSystem.ParticleEmitterType.Brick);
             }
+        }
+
+        private void PlayCollisionSound(float volume)
+        {
+            // Obtenez le son de collision depuis le gestionnaire d'assets
+            SoundEffect collisionSound = am.SndBlip;
+
+            // Jouer le son
+            collisionSound.Play(volume, 0.0f, 0.0f);
         }
     }
 }

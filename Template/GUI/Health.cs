@@ -92,7 +92,7 @@ namespace MainSpace
 
             if (showRedFlash)
             {
-                mainGame._spriteBatch.Draw(am.TexRedFlash, new Vector2(si.targetW / 3 + 20, 65), Color.White * 0.25f);
+                mainGame._spriteBatch.Draw(am.TexRedFlash, new Vector2(si.targetW / 2 - am.TexRedFlash.Width /2, 65), Color.White * 0.25f);
             }
         }
         private void DrawFullHeart(int position)
