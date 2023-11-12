@@ -16,10 +16,13 @@ namespace MainSpace
     {
         KeyboardState oldKBState;
         GamePadState oldGPState;
-        private Button MyButton;
-        private Song music;
-        static ScreenInfo screenInfo = ServiceLocator.GetService<ScreenInfo>();
+        //private Button MyButton;
+        static ScreenInfo si = ServiceLocator.GetService<ScreenInfo>();
         static AssetManager am = ServiceLocator.GetService<AssetManager>();
+        // Borders
+        public Border topBorder = new Border(am.TexWhiteVerticalBar, Border.BorderSide.Top, Color.White);
+        public Border leftBorder = new Border(am.TexWhiteLateralBar, Border.BorderSide.Left, Color.White);
+        public Border rightBorder = new Border(am.TexWhiteLateralBar, Border.BorderSide.Right, Color.White);
         public SceneMenu(MainGame pGame) : base(pGame) 
         {
 
@@ -32,25 +35,32 @@ namespace MainSpace
 
         public override void Load()
         {
-            music = am.MusicMenu;
-            MediaPlayer.IsRepeating = true;
-            // MediaPlayer.Play(music); // TODO add music menu
-            MediaPlayer.Volume = 0.2f;
+            am.LoadMusics();
+            am.PlayRandomMusic();
+
+            // Borders
+            topBorder.LoadBorder(Border.BorderSide.Top);
+            leftBorder.LoadBorder(Border.BorderSide.Left);
+            rightBorder.LoadBorder(Border.BorderSide.Right);
+
+            listActors.Add(topBorder);
+            listActors.Add(leftBorder);
+            listActors.Add(rightBorder);
 
             Rectangle Screen = mainGame.Window.ClientBounds;
 
             oldKBState = Keyboard.GetState();
             oldGPState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.IndependentAxes);
-
+            /*
             MyButton = new Button(mainGame.Content.Load<Texture2D>("textures/button"), Color.White);
             MyButton.Position = new Vector2(
                 Screen.Width / 2 - MyButton.Texture.Width/2, 
                 Screen.Height / 2 - MyButton.Texture.Height/2);
 
             MyButton.onClick = onClickPlay;
-
+            
             listActors.Add(MyButton);
-
+            */
             base.Load();
         }
 
@@ -68,7 +78,7 @@ namespace MainSpace
             KeyboardState newKBState = Keyboard.GetState();
             if ((newKBState.IsKeyDown(Keys.Space) && !oldKBState.IsKeyDown(Keys.Space)) || ButA)
             {
-                mainGame.gameState.ChangeScene(GameState.SceneType.Gameplay2);
+                mainGame.gameState.ChangeScene(GameState.SceneType.Gameplay);
             }
             oldKBState = newKBState;
 
@@ -97,7 +107,10 @@ namespace MainSpace
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(am.MainFont, "Press 'Space' to start", new Vector2(1, 1), Color.White);
+            spriteBatch.Draw(am.TexLogo, new Vector2(si.targetW / 2 - am.TexLogo.Width / 2, 65), Color.White);
+            string message = "Press SPACE to start!";
+            Vector2 textSize = am.MainFont.MeasureString(message);
+            spriteBatch.DrawString(am.MainFont, message, new Vector2(si.targetW / 2 - textSize.X / 2, 600), Color.White);
 
             base.Draw(gameTime, spriteBatch);
         }

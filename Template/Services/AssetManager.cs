@@ -21,6 +21,38 @@ namespace MainSpace
         }
         public static Song MusicGameplay { get; private set; }
         public static SoundEffect SoundExplode { get; private set; }
+        private Song[] musics;
+        private Random random = new Random();
+        private int lastMusicIndex = -1;
+        public void LoadMusics()
+        {
+            musics = new Song[7];
+            musics[0] = Music1Loop;
+            musics[1] = Music2Loop;
+            musics[2] = Music3Loop;
+            musics[3] = Music4Loop;
+            musics[4] = Music5Loop;
+            musics[5] = Music6Loop;
+            musics[6] = Music7Loop;
+        }
+        public void PlayRandomMusic()
+        {
+            // To not play the same musique when we try a new random
+            int musicIndex;
+            do
+            {
+                musicIndex = random.Next(musics.Length);
+            }
+            while (musics.Length > 1 && musicIndex == lastMusicIndex);
+
+            lastMusicIndex = musicIndex;
+
+            Song musicToPlay = musics[musicIndex];
+
+            MediaPlayer.Play(musicToPlay);
+            MediaPlayer.Volume = 0.1f;
+            MediaPlayer.IsRepeating = true;
+        }
 
         public static void Load(ContentManager pContent)
         {
@@ -52,6 +84,7 @@ namespace MainSpace
 
         // Textures
         public Texture2D TexWhiteRectangle { get { return _Content.Load<Texture2D>("textures/white rectangle"); } }
+        public Texture2D TexWhitePixel { get { return _Content.Load<Texture2D>("textures/pixel texture"); } }
         public Texture2D TexWhiteCirle { get { return _Content.Load<Texture2D>("textures/white circle"); } }
         public Texture2D TexWhiteVerticalBar { get { return _Content.Load<Texture2D>("textures/white vertical bar"); } }
         public Texture2D TexWhiteLateralBar { get { return _Content.Load<Texture2D>("textures/white lateral bar"); } }
@@ -73,6 +106,10 @@ namespace MainSpace
         public Texture2D TexUpgradeBorders { get { return _Content.Load<Texture2D>("textures/powerup rectangle"); } }
         public Texture2D TexUpgradeBackground { get { return _Content.Load<Texture2D>("textures/upgrade rectangle"); } }
         public Texture2D TexPaddleSpeed { get { return _Content.Load<Texture2D>("textures/speedpaddle"); } }
+        public Texture2D TexRedCross { get { return _Content.Load<Texture2D>("textures/red cross"); } }
+        public Texture2D TexLogo { get { return _Content.Load<Texture2D>("textures/breakout logo"); } }
+        public Texture2D TexGameOver { get { return _Content.Load<Texture2D>("textures/gameover"); } }
+        public Texture2D TexVictory { get { return _Content.Load<Texture2D>("textures/victory"); } }
 
 
     }

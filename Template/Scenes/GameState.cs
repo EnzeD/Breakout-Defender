@@ -12,8 +12,8 @@ namespace MainSpace
         {
             Menu,
             Gameplay,
-            Gameplay2,
-            Gameover
+            Gameover,
+            Victory
         }
 
         protected MainGame mainGame;
@@ -38,13 +38,13 @@ namespace MainSpace
                     CurrentScene = new SceneMenu(mainGame);
                     break;
                 case SceneType.Gameplay:
-                    CurrentScene = new SceneGameplayOld(mainGame);
-                    break;
-                case SceneType.Gameplay2:
                     CurrentScene = new SceneGameplay(mainGame);
                     break;
                 case SceneType.Gameover:
                     CurrentScene = new SceneGameover(mainGame);
+                    break;
+                case SceneType.Victory:
+                    CurrentScene = new SceneVictory(mainGame);
                     break;
                 default:
                     break;

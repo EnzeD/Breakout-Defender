@@ -93,5 +93,9 @@ namespace MainSpace
             }
 
         }
+        public int GetWidth()
+        {
+            return (int)(Texture.Width * WidthScale);
+        }
     }
 }

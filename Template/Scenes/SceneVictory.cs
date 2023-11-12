@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MainSpace
 {
-    class SceneGameover : Scene
+    class SceneVictory : Scene
     {
         KeyboardState oldKBState;
         GamePadState oldGPState;
@@ -17,7 +17,7 @@ namespace MainSpace
         public Border topBorder = new Border(am.TexWhiteVerticalBar, Border.BorderSide.Top, Color.White);
         public Border leftBorder = new Border(am.TexWhiteLateralBar, Border.BorderSide.Left, Color.White);
         public Border rightBorder = new Border(am.TexWhiteLateralBar, Border.BorderSide.Right, Color.White);
-        public SceneGameover(MainGame pGame) : base(pGame)
+        public SceneVictory(MainGame pGame) : base(pGame)
         {
 
         }

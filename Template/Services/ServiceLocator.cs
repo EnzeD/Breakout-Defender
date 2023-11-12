@@ -12,6 +12,7 @@ public static class ServiceLocator
 
     public static Health PlayerHealth { get; set; }
     public static Action OnLoseHealth;
+    public static int Health { get { return PlayerHealth.PlayerHealth; } }
 
     public static void RegisterService<T>(T service)
         {

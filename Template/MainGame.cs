@@ -19,6 +19,7 @@ namespace MainSpace
         // TO DO: manage margin for mousepos if not a 16:9 aspect ratio
         public static bool isFullScreen;
 
+
         public MainGame()
         {
             _graphics = new GraphicsDeviceManager(this);

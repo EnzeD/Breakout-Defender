@@ -49,7 +49,7 @@ namespace MainSpace
                 {
                     Image = am.TexSpeedBall,
                     Title = "Faster Ball",
-                    Description = "+ 25% faster balls!",
+                    Description = "+ 10% faster balls!",
                     BonusAction = IncreaseBallSpeed
                 },
                 new UpgradeOption
@@ -67,6 +67,16 @@ namespace MainSpace
                     BonusAction = IncrasePaddleSpeed
                 }
                 // more upgrades to come
+                /* lower danger zone
+                 * type: explosive balls
+                 * lateral portals
+                 * fire projectiles on rebound
+                 * ball damages
+                 * type: ball splits
+                 * Attrack XP
+                 * More Health
+                 * Ball cooldown
+                 */
             };
 
             paddle = listActors.OfType<Paddle>().FirstOrDefault();
@@ -191,7 +201,7 @@ namespace MainSpace
                     }
                 }
             }
-            if (state.IsKeyDown(Keys.Enter) && previousKeyboardState.IsKeyUp(Keys.Enter))
+            if (state.IsKeyDown(Keys.Enter) && previousKeyboardState.IsKeyUp(Keys.Enter) && selectedIndex!=-1)
             {
                 ApplyUpgrade(selectedIndex);
                 shouldCloseMenu = true;
@@ -259,13 +269,13 @@ namespace MainSpace
         {
             Ball ball = new Ball(am.TexWhiteCirle, paddle, Color.White, true);
             listActors.Add(ball);
-            Ball.talBallsDesired++;
+            Ball.totalBallsDesired++;
             ball.bIsLaunched = true;
         }
 
         private void IncreaseBallSpeed()
         {
-            Ball.IncreaseBaseSpeed(0.25f);
+            Ball.IncreaseBaseSpeed(0.10f);
             foreach (IActor actor in listActors)
             {
                 if (actor is Ball ball)
@@ -283,7 +293,7 @@ namespace MainSpace
 
         private void IncrasePaddleSpeed()
         {
-            Paddle.IncreaseBaseSpeed(0.25f);
+            Paddle.IncreaseBaseSpeed(0.10f);
             paddle.Speed = Paddle.BaseSpeed;
             paddle.UpdateSpeed(); // Mettez à jour la vitesse et la vélocité du paddle
         }

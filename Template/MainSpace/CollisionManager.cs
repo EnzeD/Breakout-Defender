@@ -64,7 +64,7 @@ namespace MainSpace
                 }
 
                 // Collision with bottom screen
-                if (ball.Y > si.targetH + 200) // 200 to allow the trail to not disappear
+                if (ball.Y > si.targetH + 100) // 200 to allow the trail to not disappear
                 {
                     ball.OnBallLost();
                 }
@@ -258,7 +258,7 @@ namespace MainSpace
 
                     // Xp
                     Random random = new Random();
-                    int rnd = random.Next(0, 4);
+                    int rnd = random.Next(0, 2);
                     if (rnd == 0)
                     {
                         Xp xp = new Xp(am.TexYellowSquare, Color.White, ExplositionLocation, true);

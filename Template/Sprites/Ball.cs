@@ -20,11 +20,11 @@ namespace MainSpace
         Paddle paddle;
         public bool bIsLaunched = false;
         public bool IsLost { get; private set; }
-        public double TimeUntilRelaunch { get; private set; } = 5.0f;
         public bool IsRelaunchScheduled { get; private set; }
-        private double relaunchCooldown;
-        public static int talBallsDesired = 1;
+        public double relaunchCooldown;
+        public static int totalBallsDesired = 1;
         private static float baseSpeed = 5;
+        public static float CooldownDuration = 2.0f;
         public static float BaseSpeed
         {
             get { return baseSpeed; }
@@ -35,7 +35,6 @@ namespace MainSpace
         }
         public float Speed { get; set; }
         public Vector2 PreviousPosition { get; private set; }
-        private static readonly Random random = new Random();
         public Ball(Texture2D pTexture, Paddle pPaddle, Color color, bool isCentered) : base(pTexture, color, isCentered)
         {
             paddle = pPaddle;
@@ -90,11 +89,6 @@ namespace MainSpace
         {
             Velocity = Vector2.Normalize(Velocity) * Speed;
         }
-        public void MarkAsLost()
-        {
-            IsLost = true;
-            isVisible = false;
-        }
         public void Relaunch()
         {
             IsRelaunchScheduled = false;
@@ -124,7 +118,8 @@ namespace MainSpace
         {
             if (!IsRelaunchScheduled)
             {
-                ScheduleRelaunch(5.0); 
+                ScheduleRelaunch(CooldownDuration);
+                IsLost = true;
                 isVisible = false;
             }
         }

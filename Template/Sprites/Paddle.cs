@@ -23,14 +23,13 @@ namespace MainSpace
                 baseSpeed = value;
             }
         }
+
         public float Speed { get; set; }
-        public Paddle(Texture2D pTexture, Color color) : base(pTexture, color)
-        {
-            Speed = BaseSpeed;
-        }
+
         public Paddle(Texture2D pTexture, Color color, bool isCentered = true) : base(pTexture, color, isCentered)
         {
-
+            WidthScale = 1f;
+            Speed = BaseSpeed;
         }
         public void Load()
         {
@@ -40,7 +39,11 @@ namespace MainSpace
         }
         public void ExtendWidth(float percentage)
         {
-            WidthScale += percentage;
+            WidthScale += WidthScale * percentage;
+        }
+        public void ResetWidth()
+        {
+            WidthScale = 1f;
         }
         public static void IncreaseBaseSpeed(float percentage)
         {

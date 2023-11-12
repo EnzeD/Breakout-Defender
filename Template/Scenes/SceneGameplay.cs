@@ -37,14 +37,15 @@ namespace MainSpace
         public Border redLine = new Border(am.TexRedLine, Border.BorderSide.None, Color.White * 0.5f);
 
         // Bricks
-        public Brick brick1 = new Brick(am.TexWhiteBrick, Color.White, true);
-        public Brick brick2 = new Brick(am.TexWhiteBrick, Color.White, true);
         public List<Brick> listBricks;
         private int nbColumns = 9;
-        private int nbStartingRows = 3;
-        private int nbTotalRows = 72;
         private int spacing = 5;
-        private float percentBricksToDisplay = 0.1f;
+        private int stageStartX;
+        private int stageStartY;
+
+        // Stages
+        private Queue<Stage> stages;
+        private Stage currentStage;
 
         // Particles
         List<Texture2D> listParticleTextures = new List<Texture2D>();
@@ -57,11 +58,10 @@ namespace MainSpace
         private Health health;
         private Upgrader upgrader;
         private Background background;
+        private Stats stats;
+        private BallsDisplay ballsDisplay;
         private bool isPaused = false;
         private bool drawUpgrades = false;
-
-        // Music
-        private Song music = am.Music3Loop;
 
         public SceneGameplay(MainGame pGame) : base(pGame)
         {
@@ -71,6 +71,18 @@ namespace MainSpace
             listParticleTextures.Add(am.TexDiamondParticle);
             particleSystem = new ParticleSystem(listParticleTextures, Vector2.Zero);
             ServiceLocator.Level = 1;
+            ServiceLocator.Xp = 0;
+            Ball.totalBallsDesired = 1;
+            Brick.brickSpeed = 0.3f;
+            Paddle.BaseSpeed = 5;
+            Ball.BaseSpeed = 5;
+
+            stages = new Queue<Stage>();
+
+            // Stages
+            stages.Enqueue(new Stage(1, 0, 10, 0.12f, 0.3f));
+            stages.Enqueue(new Stage(2, 0, 100, 0.15f, 0.35f));
+            // More to add
         }
 
         public override void Load()
@@ -78,6 +90,7 @@ namespace MainSpace
             // Paddle Loading
             paddle.Load();
             listActors.Add(paddle);
+            paddle.ResetWidth();
 
             // Ball Loading
             ball.Load();
@@ -95,34 +108,27 @@ namespace MainSpace
             listActors.Add(redLine);
 
             // Bricks Loading
-            listBricks = Brick.CreateBricks(
-                listActors, am.TexWhiteBrick, 
-                leftBorder.X + leftBorder.Width / 2 + am.TexWhiteBrick.Width / 2, // to start just below the borders
-                topBorder.Y + topBorder.Height + am.TexWhiteBrick.Height / 2,
-                spacing, // Spacing in pixels between bricks
-                nbColumns, // Number of columns
-                nbStartingRows, // Number of starting rows
-                nbTotalRows); // Total number of rows
+            stageStartX = leftBorder.X + leftBorder.Width / 2 + am.TexWhiteBrick.Width / 2;  // to start just below the borders
+            stageStartY = topBorder.Y + topBorder.Height - am.TexWhiteBrick.Height / 2;
 
-            Brick.RemoveRandomBricks(listActors, (int)(nbTotalRows * nbColumns * (1 -percentBricksToDisplay)));
 
             // Health GUI
             health = new Health(mainGame);
             ServiceLocator.InitializeHealth(health);
             upgrader = new Upgrader(mainGame, listActors);
             background = new Background(mainGame);
+            stats = new Stats(mainGame, listActors);
+            ballsDisplay = new BallsDisplay(mainGame, listActors);
 
             // Collision Manager Loading
             CollisionManager = new CollisionManager(listActors);
 
-            // Music
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Play(music);
-            MediaPlayer.Volume = 0.1f;
-
             // Keyboard & Gamepad old states
             oldKBState = Keyboard.GetState();
             oldGPState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.IndependentAxes);
+            
+            // Load first stage
+            LoadNextStage(); 
 
             base.Load();
         }
@@ -231,12 +237,25 @@ namespace MainSpace
                 {
                     ball.UpdateRelaunchCooldown(gameTime);
                 }
+                ballsDisplay.Update(gameTime);
 
                 // Bricks
-                Brick.UpdateBrickSpeed(gameTime);
+                //Brick.UpdateBrickSpeed(gameTime);
 
                 // Clean sprites being tagged as to remove
                 Clean();
+
+                // Next Stage
+                if (listActors.OfType<Brick>().All(brick => brick.ToRemove))
+                {
+                    LoadNextStage();
+                }
+
+                // Game over Scene
+                if (ServiceLocator.Health <= 0)
+                {
+                    mainGame.gameState.ChangeScene(GameState.SceneType.Gameover);
+                }
 
                 base.Update(gameTime);
             }
@@ -253,18 +272,41 @@ namespace MainSpace
 
             oldKBState = newKBState;
         }
+        private void LoadNextStage()
+        {
+            if (stages.Any())
+            {
+                currentStage = stages.Dequeue();
+                GenerateBrickList(currentStage); // Utilise les propriétés du stage actuel pour générer les briques
+                am.PlayRandomMusic(); // change the beat ;)
+            }
+            else
+            {   
+                // If no more stages: VICTORY!!
+                mainGame.gameState.ChangeScene(SceneType.Victory);
+            }
+        }
+
+        private void GenerateBrickList(Stage stage)
+        {
+            listBricks = Brick.CreateBricks(
+            listActors, am.TexWhiteBrick,
+            stageStartX,
+            stageStartY,
+            spacing, // Spacing in pixels between bricks
+            nbColumns,
+            stage.NbStartingRows,
+            stage.NbTotalRows,
+            stage.BrickSpeed
+            );
+
+            Brick.RemoveRandomBricks(listActors, (int)(stage.NbTotalRows * nbColumns * (1 - stage.PercentBricksToDisplay)));
+        }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            mainGame.GraphicsDevice.Clear(Color.Black);
-            /*
-            
-            spriteBatch.DrawString(am.MainFont, "nb actors: " + listActors.Count().ToString(), new Vector2(1, 30), Color.White);
-            spriteBatch.DrawString(am.MainFont, "paddle.x :" + paddle.X, new Vector2(1, 60), Color.White);
-            */
             if (!drawUpgrades)
                 background.Draw(gameTime);
-
 
             // TO DO : manage XP display elsewhere
             float xpNeeded = 20;
@@ -279,17 +321,11 @@ namespace MainSpace
                 isPaused = true;
             }
 
-            // Health
+            // GUI
             health.DrawHearts();
+            stats.Draw();
+            ballsDisplay.Draw(gameTime);
 
-            // Red background
-            //spriteBatch.Draw(am.TexRedFlash, new Vector2(si.targetW / 3 + 20, 65), Color.White * 0.25f);
-
-            // Test abstract lines at the bottom
-            //spriteBatch.Draw(am.TextAbstractLines, new Vector2(si.targetW / 3 + 20, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 95), Color.White * 0.5f);
-
-
-            //spriteBatch.DrawString(am.MainFont, "nb Xp on screen: " + listActors.OfType<Xp>().Count().ToString(), new Vector2(1, 1), Color.White);
             spriteBatch.DrawString(am.MainFont, "Level " + ServiceLocator.Level, new Vector2(200, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 70), Color.White);
             spriteBatch.DrawString(am.MainFont, "Xp : " + ServiceLocator.Xp + " / " + (int)xpNeeded, new Vector2(200, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 40), Color.White);
             if (particleSystem != null)
@@ -298,7 +334,6 @@ namespace MainSpace
             Rectangle xpBarBorder = new Rectangle(200, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - am.TexXpBarBorder.Height / 2, am.TexXpBarBorder.Width, am.TexXpBarBorder.Height);
             spriteBatch.Draw(am.TexXpBarBorder, xpBarBorder, Color.White);
 
-           
             Rectangle xpBar = new Rectangle(204, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - am.TexXpBarBorder.Height / 2, (int)(am.TexXpBarBorder.Width * xpRatio), am.TexXpBarGreen.Height);
             spriteBatch.Draw(am.TexXpBarGreen, xpBar, Color.White);
 

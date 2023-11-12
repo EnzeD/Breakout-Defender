@@ -16,16 +16,17 @@ namespace MainSpace
         private static readonly Random random = new Random();
 
         public static float brickSpeed = 0.3f;
-        private static float speedIncrement = 0.05f; 
+        /*
+        private static float speedIncrement = 0.01f; 
         private static double timeSinceLastSpeedIncrease = 0; 
         private static double speedIncreaseInterval = 10; 
-
+        */
 
         public Brick(Texture2D pTexture, Color color, bool isCentered = true) : base(pTexture, color, isCentered)
         {
             
         }
-        public static List<Brick> CreateBricks(List<IActor> listActors, Texture2D pTexture, int pStartX, int pStartY, int pSpacing, int pBricksPerRow, int pStartNumberOfRows,int pNumberOfRows)
+        public static List<Brick> CreateBricks(List<IActor> listActors, Texture2D pTexture, int pStartX, int pStartY, int pSpacing, int pBricksPerRow, int pStartNumberOfRows,int pNumberOfRows, float pBrickSpeed)
         {
             List<Brick> bricks = new List<Brick>();
             int spacing = pSpacing;
@@ -35,6 +36,7 @@ namespace MainSpace
             int startY = pStartY + pSpacing + (pStartNumberOfRows - 1) * (brickHeight + spacing);
             int bricksPerRow = pBricksPerRow;
             int numberOfRows = pNumberOfRows;
+            brickSpeed = pBrickSpeed;
             Color color;
 
             Random rand = new Random();
@@ -64,23 +66,13 @@ namespace MainSpace
                         default: 
                             color = Color.White;
                             break;
-
-
                     }
-                    /*
-                    int r = rand.Next(256);
-                    int g = rand.Next(256);
-                    int b = rand.Next(256);
-                    Brick brick = new Brick(pTexture, new Color(r, g, b), true);
-                    */
-
                     Brick brick = new Brick(pTexture, color, true);
                     brick.Position = new Vector2(x, y);
                     brick.isVisible = false;
                     listActors.Add(brick);
                     bricks.Add(brick);
                 }
-
             }
             return bricks;
         }
@@ -88,6 +80,7 @@ namespace MainSpace
         {
             List<Brick> listBricks = listActors.OfType<Brick>().ToList();
             int numberOfBricks = listBricks.Count;
+
             // To avoid removing more than the number of bricks
             numberOfBricksToRemove = Math.Min(numberOfBricksToRemove, numberOfBricks);
 
@@ -115,17 +108,18 @@ namespace MainSpace
 
             base.Update(pGameTime);
         }
+        /*
         public static void UpdateBrickSpeed(GameTime pGameTime)
         {
             timeSinceLastSpeedIncrease += pGameTime.ElapsedGameTime.TotalSeconds;
 
-            // Vérifiez si suffisamment de temps s'est écoulé pour augmenter la vitesse
             if (timeSinceLastSpeedIncrease >= speedIncreaseInterval)
             {
-                brickSpeed += speedIncrement; // Augmentez la vitesse
-                timeSinceLastSpeedIncrease -= speedIncreaseInterval; // Note: on utilise -= pour gérer des intervalles qui ne sont pas des multiples exacts de pGameTime.ElapsedGameTime.TotalSeconds
+                brickSpeed += speedIncrement; 
+                timeSinceLastSpeedIncrease -= speedIncreaseInterval; 
             }
         }
+        */
     }
 
 }
