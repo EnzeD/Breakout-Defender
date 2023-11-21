@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;
@@ -19,16 +20,20 @@ namespace MainSpace
         private static readonly ScreenInfo si = ServiceLocator.GetService<ScreenInfo>();
 
         public int NbStartingRows { get; private set; }
+        public int Number { get; private set; }
         public int NbTotalRows { get; private set; }
         public float PercentBricksToDisplay { get; private set; }
         public float BrickSpeed {  get; private set; }
+        public Color Color;
 
-        public Stage(int number, int nbStartingRows, int nbTotalRows, float percentBricksToDisplay, float brickSpeed)
+        public Stage(int number, int nbStartingRows, int nbTotalRows, float percentBricksToDisplay, float brickSpeed, Color color)
         {
+            Number = number;
             NbStartingRows = nbStartingRows;
             NbTotalRows = nbTotalRows;
             PercentBricksToDisplay = percentBricksToDisplay;
             BrickSpeed = brickSpeed;
+            Color = color;
         }
     }
 }

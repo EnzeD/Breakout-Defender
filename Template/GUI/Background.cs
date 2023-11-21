@@ -18,11 +18,11 @@ namespace MainSpace
         {
 
         }
-        public void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime, Color color)
         {
             // Level Up Background
             Texture2D rectTexture = am.TexBackground;
-            Color texColor = Color.DarkViolet * 0.25f;
+            Color texColor = color * 0.25f;
 
             Vector2 position = new Vector2(si.targetW / 3 + 10, 65);
             mainGame._spriteBatch.Draw(rectTexture, position, texColor);

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace MainSpace
 {
@@ -19,7 +18,7 @@ namespace MainSpace
         private readonly List<Xp> listXp = new List<Xp>();
         private Paddle paddle;
         private Border leftBorder, rightBorder, topBorder, redLine;
-        private float soundEffectsVolume = 0.1f;
+        private float soundEffectsVolume = 0.04f;
         public CollisionManager(List<IActor> pListActors)
         {
             listActors = pListActors;

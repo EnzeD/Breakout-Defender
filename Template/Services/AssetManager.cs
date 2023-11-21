@@ -50,7 +50,7 @@ namespace MainSpace
             Song musicToPlay = musics[musicIndex];
 
             MediaPlayer.Play(musicToPlay);
-            MediaPlayer.Volume = 0.1f;
+            MediaPlayer.Volume = 0.02f;
             MediaPlayer.IsRepeating = true;
         }
 

@@ -78,7 +78,7 @@ namespace MainSpace
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(am.TexGameOver, new Vector2(si.targetW / 2 - am.TexGameOver.Width / 2, 65), Color.White);
+            spriteBatch.Draw(am.TexVictory, new Vector2(si.targetW / 2 - am.TexVictory.Width / 2, 65), Color.White);
             string message = "Press SPACE to try again!";
             Vector2 textSize = am.MainFont.MeasureString(message);
             spriteBatch.DrawString(am.MainFont, message, new Vector2(si.targetW / 2 - textSize.X / 2, 600), Color.White);

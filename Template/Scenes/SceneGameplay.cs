@@ -46,6 +46,11 @@ namespace MainSpace
         // Stages
         private Queue<Stage> stages;
         private Stage currentStage;
+        private string stageMessage;
+        private bool stageMessageToDiplay = false;
+        private const int StageMessageDisplayTime = 2000;
+        private float stageMessageAlpha = 1.0f;
+        private int stageMessageTimer = StageMessageDisplayTime;
 
         // Particles
         List<Texture2D> listParticleTextures = new List<Texture2D>();
@@ -62,6 +67,8 @@ namespace MainSpace
         private BallsDisplay ballsDisplay;
         private bool isPaused = false;
         private bool drawUpgrades = false;
+        private Color backgroundColor;
+        float xpNeeded;
 
         public SceneGameplay(MainGame pGame) : base(pGame)
         {
@@ -76,12 +83,21 @@ namespace MainSpace
             Brick.brickSpeed = 0.3f;
             Paddle.BaseSpeed = 5;
             Ball.BaseSpeed = 5;
+            xpNeeded = 20;
 
             stages = new Queue<Stage>();
 
             // Stages
-            stages.Enqueue(new Stage(1, 0, 10, 0.12f, 0.3f));
-            stages.Enqueue(new Stage(2, 0, 100, 0.15f, 0.35f));
+            stages.Enqueue(new Stage(1, 0, 10, 0.12f, 0.3f, Color.Cyan));
+            stages.Enqueue(new Stage(2, 0, 20, 0.15f, 0.32f, Color.DarkViolet));
+            stages.Enqueue(new Stage(3, 0, 30, 0.20f, 0.34f, Color.Tomato));
+            stages.Enqueue(new Stage(4, 0, 40, 0.25f, 0.36f, Color.LimeGreen));
+            stages.Enqueue(new Stage(5, 0, 50, 0.30f, 0.38f, Color.Black));
+            stages.Enqueue(new Stage(6, 0, 60, 0.35f, 0.45f, Color.Cyan));
+            stages.Enqueue(new Stage(7, 0, 70, 0.40f, 0.50f, Color.DarkViolet));
+            stages.Enqueue(new Stage(8, 0, 80, 0.45f, 0.55f, Color.Tomato));
+            stages.Enqueue(new Stage(9, 0, 90, 0.50f, 0.60f, Color.LimeGreen));
+            stages.Enqueue(new Stage(10, 0, 200, 0.55f, 0.80f, Color.Black));
             // More to add
         }
 
@@ -251,6 +267,20 @@ namespace MainSpace
                     LoadNextStage();
                 }
 
+                if (stageMessageToDiplay)
+                {
+                    stageMessageTimer -= gameTime.ElapsedGameTime.Milliseconds;
+                    if (stageMessageTimer <= 0)
+                    {
+                        stageMessageToDiplay = false;
+                        stageMessageTimer = 0;
+                    }
+                    else
+                    {
+                        stageMessageAlpha = stageMessageTimer / (float)StageMessageDisplayTime;
+                    }
+                }
+
                 // Game over Scene
                 if (ServiceLocator.Health <= 0)
                 {
@@ -277,8 +307,12 @@ namespace MainSpace
             if (stages.Any())
             {
                 currentStage = stages.Dequeue();
-                GenerateBrickList(currentStage); // Utilise les propriétés du stage actuel pour générer les briques
+                GenerateBrickList(currentStage); 
                 am.PlayRandomMusic(); // change the beat ;)
+                stageMessage = "STAGE " + currentStage.Number;
+                stageMessageAlpha = 1.0f;
+                stageMessageTimer = StageMessageDisplayTime;
+                stageMessageToDiplay = true;
             }
             else
             {   
@@ -299,22 +333,34 @@ namespace MainSpace
             stage.NbTotalRows,
             stage.BrickSpeed
             );
-
+            backgroundColor = stage.Color;
             Brick.RemoveRandomBricks(listActors, (int)(stage.NbTotalRows * nbColumns * (1 - stage.PercentBricksToDisplay)));
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (!drawUpgrades)
-                background.Draw(gameTime);
+                background.Draw(gameTime, backgroundColor);
+
+            if (stageMessageToDiplay)
+            {
+                Vector2 textSize = am.TitleFont.MeasureString(stageMessage);
+                spriteBatch.DrawString(
+                    am.TitleFont,
+                    stageMessage,
+                    new Vector2(si.targetW / 2 - textSize.X / 2, si.targetH / 2 - textSize.Y / 2),
+                    Color.White * stageMessageAlpha
+                );
+            }
 
             // TO DO : manage XP display elsewhere
-            float xpNeeded = 20;
+
             float xpRatio = (float)ServiceLocator.Xp / xpNeeded;
             if (xpRatio >= 1)
             {
                 ServiceLocator.Xp -= (int)xpNeeded;
                 ServiceLocator.Level++;
+                xpNeeded += ServiceLocator.Level * 2;
                 upgrader.ResetCloseMenuState();
                 upgrader.ShowLevelUpOptions();
                 drawUpgrades = true;

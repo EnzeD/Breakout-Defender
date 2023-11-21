@@ -232,11 +232,11 @@ namespace MainSpace
                 var upgrade = upgrades[i];
 
                 // Bordercolor depending if selected
-                Color borderColor = i == selectedIndex ? Color.Yellow : Color.White;
+                Color borderColor = i == selectedIndex ? Color.Cyan : Color.White;
 
                 // Draw background rectangle with border color
                 Texture2D backgroundRect = am.TexUpgradeBackground;
-                spriteBatch.Draw(backgroundRect, position, borderColor * 0.2f);
+                spriteBatch.Draw(backgroundRect, position, i == selectedIndex ? Color.Black*0.7f : Color.DarkSlateGray*0.7f);
 
                 // Draw background rectangle with border color
                 Texture2D rectBorders = am.TexUpgradeBorders;
@@ -255,7 +255,7 @@ namespace MainSpace
                 spriteBatch.DrawString(am.DescriptionFont, upgrade.Description, descriptionPosition, Color.White);
 
                 // Next upgrade position
-                position.Y += backgroundRect.Height + padding;
+                position.Y += backgroundRect.Height + padding /2;
             }
         }
         public void ApplyUpgrade(int selectedIndex)
