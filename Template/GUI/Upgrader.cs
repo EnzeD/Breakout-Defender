@@ -56,7 +56,7 @@ namespace MainSpace
                 {
                     Image = am.TexExtendPaddle,
                     Title = "Wider Paddle",
-                    Description = "+10% wider!",
+                    Description = "+20% wider!",
                     BonusAction = ExtendPaddle
                 },
                 new UpgradeOption
@@ -65,7 +65,23 @@ namespace MainSpace
                     Title = "Faster Paddle",
                     Description = "+10% faster!",
                     BonusAction = IncrasePaddleSpeed
+                },
+                new UpgradeOption
+                {
+                    Image = am.TexDoubleHearts,
+                    Title = "2 more hearts",
+                    Description = "You are going to need it!",
+                    BonusAction = AddHp
+                },
+                new UpgradeOption 
+                { 
+                    Image = am.TexBallCooldown,
+                    Title = "Ball Cooldown Reduction",
+                    Description = "Balls reappars 25% faster!",
+                    BonusAction = ReduceBallCooldown
                 }
+
+
                 // more upgrades to come
                 /* lower danger zone
                  * type: explosive balls
@@ -73,9 +89,8 @@ namespace MainSpace
                  * fire projectiles on rebound
                  * ball damages
                  * type: ball splits
+                 * hauteur barre rouge
                  * Attrack XP
-                 * More Health
-                 * Ball cooldown
                  */
             };
 
@@ -288,7 +303,7 @@ namespace MainSpace
 
         private void ExtendPaddle()
         {
-            paddle.ExtendWidth(0.10f);
+            paddle.ExtendWidth(0.20f);
         }
 
         private void IncrasePaddleSpeed()
@@ -296,6 +311,15 @@ namespace MainSpace
             Paddle.IncreaseBaseSpeed(0.10f);
             paddle.Speed = Paddle.BaseSpeed;
             paddle.UpdateSpeed(); // Mettez à jour la vitesse et la vélocité du paddle
+        }
+
+        private void AddHp()
+        {
+            ServiceLocator.IncreaseHealth(40);
+        }
+        private void ReduceBallCooldown()
+        {
+            Ball.ReduceCooldown(0.25f);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace MainSpace
         public double relaunchCooldown;
         public static int totalBallsDesired = 1;
         private static float baseSpeed = 5;
-        public static float CooldownDuration = 2.0f;
+        public static float CooldownDuration = 4.0f;
         public static float BaseSpeed
         {
             get { return baseSpeed; }
@@ -122,6 +122,10 @@ namespace MainSpace
                 IsLost = true;
                 isVisible = false;
             }
+        }
+        public static void ReduceCooldown(float percentage)
+        {
+            CooldownDuration *= 1 - percentage;
         }
     }
 }

@@ -12,6 +12,7 @@ public static class ServiceLocator
 
     public static Health PlayerHealth { get; set; }
     public static Action OnLoseHealth;
+    public static Action OnIncreaseHealth;
     public static int Health { get { return PlayerHealth.PlayerHealth; } }
 
     public static void RegisterService<T>(T service)
@@ -36,6 +37,11 @@ public static class ServiceLocator
     {
         PlayerHealth.PlayerHealth -= 10;
         OnLoseHealth?.Invoke();
+    }
+    public static void IncreaseHealth(int hp)
+    {
+        PlayerHealth.PlayerHealth += hp;
+        OnIncreaseHealth?.Invoke();
     }
 
     /* TO DO

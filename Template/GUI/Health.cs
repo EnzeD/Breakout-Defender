@@ -97,15 +97,19 @@ namespace MainSpace
         }
         private void DrawFullHeart(int position)
         {
-            int x = 200 + position * (am.TexHeart.Width + heartSpacing);
-            int y = si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 100;
+            int quotient = position / 7;
+            int xPosition = position % 7;
+            int x = 200 + xPosition * (am.TexHeart.Width + heartSpacing);
+            int y = si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 100 - quotient*(30);
             mainGame._spriteBatch.Draw(am.TexHeart, new Vector2(x,y), Color.White);
         }
 
         private void DrawHalfHeart(int position)
         {
-            int x = 200 + position * (am.TexHeart.Width + heartSpacing);
-            int y = si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 100;
+            int quotient = position / 7;
+            int xPosition = position % 7;
+            int x = 200 + xPosition * (am.TexHeart.Width + heartSpacing);
+            int y = si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 100 - quotient * (30);
 
             Rectangle halfHeartSource = new Rectangle(0, 0, am.TexHeart.Width / 2, am.TexHeart.Height);
 

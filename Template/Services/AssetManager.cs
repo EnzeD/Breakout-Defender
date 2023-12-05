@@ -100,17 +100,17 @@ namespace MainSpace
         public Texture2D TexRedFlash { get { return _Content.Load<Texture2D>("textures/red flash"); } }
         public Texture2D TexAbstractLines { get { return _Content.Load<Texture2D>("textures/abstractlines"); } }
         public Texture2D TexBackground { get { return _Content.Load<Texture2D>("textures/background"); } }
-        public Texture2D TexAddBall { get { return _Content.Load<Texture2D>("textures/addball"); } }
+        public Texture2D TexAddBall { get { return _Content.Load<Texture2D>("textures/addball2"); } }
         public Texture2D TexExtendPaddle { get { return _Content.Load<Texture2D>("textures/extendpaddle"); } }
-        public Texture2D TexSpeedBall { get { return _Content.Load<Texture2D>("textures/speedball"); } }
+        public Texture2D TexSpeedBall { get { return _Content.Load<Texture2D>("textures/speedball2"); } }
         public Texture2D TexUpgradeBorders { get { return _Content.Load<Texture2D>("textures/powerup rectangle"); } }
         public Texture2D TexUpgradeBackground { get { return _Content.Load<Texture2D>("textures/upgrade rectangle"); } }
-        public Texture2D TexPaddleSpeed { get { return _Content.Load<Texture2D>("textures/speedpaddle"); } }
+        public Texture2D TexPaddleSpeed { get { return _Content.Load<Texture2D>("textures/speedpaddle2"); } }
         public Texture2D TexRedCross { get { return _Content.Load<Texture2D>("textures/red cross"); } }
         public Texture2D TexLogo { get { return _Content.Load<Texture2D>("textures/breakout logo"); } }
         public Texture2D TexGameOver { get { return _Content.Load<Texture2D>("textures/gameover"); } }
         public Texture2D TexVictory { get { return _Content.Load<Texture2D>("textures/victory"); } }
-
-
+        public Texture2D TexDoubleHearts { get { return _Content.Load<Texture2D>("textures/doublehearts"); } }
+        public Texture2D TexBallCooldown { get { return _Content.Load<Texture2D>("textures/ballcooldown"); } }
     }
 }

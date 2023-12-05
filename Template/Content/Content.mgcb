@@ -148,6 +148,18 @@
 /processorParam:TextureFormat=Color
 /build:textures/addball.png
 
+#begin textures/addball2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/addball2.png
+
 #begin textures/background.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -159,6 +171,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/background.png
+
+#begin textures/ballcooldown.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/ballcooldown.png
 
 #begin textures/breakout logo.png
 /importer:TextureImporter
@@ -208,6 +232,18 @@
 /processorParam:TextureFormat=Color
 /build:textures/diamond.png
 
+#begin textures/doublehearts.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/doublehearts.png
+
 #begin textures/extendpaddle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -219,18 +255,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/extendpaddle.png
-
-#begin textures/gameover.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/gameover.png
 
 #begin textures/gameover.png
 /importer:TextureImporter
@@ -388,6 +412,18 @@
 /processorParam:TextureFormat=Color
 /build:textures/speedball.png
 
+#begin textures/speedball2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/speedball2.png
+
 #begin textures/speedpaddle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -399,6 +435,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/speedpaddle.png
+
+#begin textures/speedpaddle2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/speedpaddle2.png
 
 #begin textures/star.png
 /importer:TextureImporter
