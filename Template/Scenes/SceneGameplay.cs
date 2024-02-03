@@ -365,6 +365,7 @@ namespace MainSpace
             stats.Draw();
             ballsDisplay.Draw(gameTime);
 
+            // TODO: move in GUI
             spriteBatch.DrawString(am.MainFont, "Level " + ServiceLocator.Level, new Vector2(200, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 70), Color.White);
             spriteBatch.DrawString(am.MainFont, "Xp : " + ServiceLocator.Xp + " / " + (int)xpNeeded, new Vector2(200, si.targetH - ServiceLocator.DIST_FROM_BOTTOM_SCREEN - 40), Color.White);
             if (particleSystem != null)

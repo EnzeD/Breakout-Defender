@@ -71,8 +71,6 @@ namespace MainSpace
                 }
                 oldGPState = newGPState;
             }
-
-
             base.Update(gameTime);
         }
 

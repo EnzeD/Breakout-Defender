@@ -43,12 +43,4 @@ public static class ServiceLocator
         PlayerHealth.PlayerHealth += hp;
         OnIncreaseHealth?.Invoke();
     }
-
-    /* TO DO
-     * score
-     * improve ScreenInfo
-     * xp
-     * 
-     */
-
 }

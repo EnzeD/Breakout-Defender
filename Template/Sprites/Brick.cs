@@ -16,11 +16,6 @@ namespace MainSpace
         private static readonly Random random = new Random();
 
         public static float brickSpeed = 0.3f;
-        /*
-        private static float speedIncrement = 0.01f; 
-        private static double timeSinceLastSpeedIncrease = 0; 
-        private static double speedIncreaseInterval = 10; 
-        */
 
         public Brick(Texture2D pTexture, Color color, bool isCentered = true) : base(pTexture, color, isCentered)
         {
@@ -108,18 +103,5 @@ namespace MainSpace
 
             base.Update(pGameTime);
         }
-        /*
-        public static void UpdateBrickSpeed(GameTime pGameTime)
-        {
-            timeSinceLastSpeedIncrease += pGameTime.ElapsedGameTime.TotalSeconds;
-
-            if (timeSinceLastSpeedIncrease >= speedIncreaseInterval)
-            {
-                brickSpeed += speedIncrement; 
-                timeSinceLastSpeedIncrease -= speedIncreaseInterval; 
-            }
-        }
-        */
     }
-
 }

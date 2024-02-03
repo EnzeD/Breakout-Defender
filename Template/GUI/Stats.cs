@@ -22,18 +22,6 @@ namespace MainSpace
             listActors = pListActors;
             paddle = listActors.OfType<Paddle>().FirstOrDefault();
         }
-        /* Max balls
-         * Ball Speed
-         * Brick Speed
-         * Paddle Speed
-         * Ball Damage
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         */
 
         public void Draw()
         {

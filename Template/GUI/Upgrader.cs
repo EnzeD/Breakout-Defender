@@ -89,7 +89,6 @@ namespace MainSpace
                  * fire projectiles on rebound
                  * ball damages
                  * type: ball splits
-                 * hauteur barre rouge
                  * Attrack XP
                  */
             };

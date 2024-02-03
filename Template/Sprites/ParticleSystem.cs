@@ -6,12 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-/* 
- TO DO: améliorer en rajoutant une liste de liste de particuliers + une méthode event  
- TO DO: améliorer en si EmitterType = Brick, pour que les particules occupent toute la brique  
- Fix: brick particle not deleting themselves*
-*/
-
 namespace MainSpace
 {
     public class ParticleSystem

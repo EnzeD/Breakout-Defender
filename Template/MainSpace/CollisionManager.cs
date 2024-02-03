@@ -85,7 +85,6 @@ namespace MainSpace
             {
                 CheckBrickCollision(brick, particleSystem);
             }
-
         }
 
         public void CheckBorderCollision(Ball ball)
@@ -328,10 +327,8 @@ namespace MainSpace
 
         private void PlayCollisionSound(float volume)
         {
-            // Obtenez le son de collision depuis le gestionnaire d'assets
+            // Collision Sound
             SoundEffect collisionSound = am.SndBlip;
-
-            // Jouer le son
             collisionSound.Play(volume, 0.0f, 0.0f);
         }
     }
